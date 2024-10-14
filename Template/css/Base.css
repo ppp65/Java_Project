@@ -16,6 +16,10 @@
     top: 0;
 }
 
+.select {
+    background: lightgray;
+}
+
 header {
     text-align: center;
 }
