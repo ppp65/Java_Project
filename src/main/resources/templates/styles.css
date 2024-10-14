@@ -1,4 +1,3 @@
-/* CSS: styles.css */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -11,6 +10,7 @@ header {
     color: white;
     text-align: center;
     padding: 1em;
+    position: relative; /* 우측 상단 배치를 위한 상대적 위치 설정 */
 }
 nav {
     background-color: #333;
@@ -42,4 +42,69 @@ nav button:hover {
 }
 .content-section:not(.hidden) {
     display: block;
+}
+
+/* 로그인 및 회원가입 버튼 우측 상단 배치 */
+.auth-buttons {
+    position: absolute;
+    right: 10px; /* 우측 정렬 */
+    top: 10px;   /* 상단 정렬 */
+    display: flex;
+    gap: 10px;
+}
+
+.auth-buttons button {
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-buttons button:hover {
+    background-color: #0056b3;
+    color: #fff;
+    border: 1px solid #0056b3;
+}
+
+/* styles.css */
+
+/* Modal 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
