@@ -86,7 +86,7 @@ section .MainMenu li {
 
 section .MainMenu li a {
     display: block;
-    width: 150px;
+    width: 100px;
     height: 30px;
     font-size: 13px;
     color: #333;
