@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Blog Post - Start Bootstrap Template</title>
+    <title>EPL Insight 정보</title>
     <!-- Favicon-->
     <link href="css/styles.css" rel="stylesheet" />
 </head>
@@ -13,11 +13,11 @@
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#!">Start Bootstrap</a>
+        <a class="navbar-brand" href="#!">EPL Insight</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.html">순위</a></li>
+                <li class="nav-item"><a class="nav-link" href="rank.html">순위</a></li>
                 <li class="nav-item"><a class="nav-link" href="schedule.html">일정</a></li>
                 <li class="nav-item"><a class="nav-link" href="news.html">뉴스</a></li>
                 <li class="nav-item"><a class="nav-link" href="highlights.html">하이라이트</a></li>
@@ -103,42 +103,35 @@
         </div>
         <!-- Side widgets-->
         <div class="col-lg-4">
-            <!-- Search widget-->
             <div class="card mb-4">
-                <div class="card-header">Search</div>
+                <div class="card-header">Login</div>
                 <div class="card-body">
-                    <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Categories widget-->
-            <div class="card mb-4">
-                <div class="card-header">Categories</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
+                    <!-- 로그인 전 입력 폼 -->
+                    <div id="login-form">
+                        <div class="input-group mb-3">
+                            <!-- 아이디 입력 -->
+                            <input class="form-control" type="text" id="username" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
                         </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
+                        <div class="input-group mb-3">
+                            <!-- 비밀번호 입력 -->
+                            <input class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
+                        </div>
+                        <!-- 로그인 버튼 -->
+                        <div class="d-grid">
+                            <button class="btn btn-primary" id="button-login" type="button">Login</button>
+                        </div>
+                        <!-- 회원가입 링크 추가 -->
+                        <div class="text-center mt-3">
+                            <a href="signup.html" class="text-decoration-none">회원가입</a>
                         </div>
                     </div>
+
+                    <!-- 로그인 후 닉네임을 표시할 영역 -->
+                    <div id="welcome-message" style="display: none;">
+                        <p>환영합니다, <span id="nickname"></span> 님!</p>
+                        <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
+                    </div>
                 </div>
-            </div>
-            <!-- Side widget-->
-            <div class="card mb-4">
-                <div class="card-header">Side Widget</div>
-                <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
             </div>
         </div>
     </div>
