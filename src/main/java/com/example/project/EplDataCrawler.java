@@ -5,13 +5,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class EplDataCrawler {
 
-    public static List<String[]> getEplRankings() {
+    public List<String[]> getEplRankings() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         List<String[]> rankings = new ArrayList<>();
@@ -48,7 +50,7 @@ public class EplDataCrawler {
     }
 
     // 순위에 포함된 자격 문구를 확인하는 메소드
-    private static String getQualificationStatus(String rankText) {
+    private String getQualificationStatus(String rankText) {
         if (rankText.contains("UEFA")) {
             return "UEFA 챔스 출전 자격";
         } else if (rankText.contains("유로파")) {
@@ -59,4 +61,3 @@ public class EplDataCrawler {
         return "";
     }
 }
-
