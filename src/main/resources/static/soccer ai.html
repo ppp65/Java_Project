@@ -10,10 +10,9 @@
     <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
-<!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="index.html">EPL Insight</a>
+        <a class="navbar-brand" href="#!">Start Bootstrap</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -30,83 +29,104 @@
         </div>
     </div>
 </nav>
+
 <!-- Page content-->
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-8">
-            <!-- Post content-->
-            <!-- Post content-->
-            <!-- Post content-->
             <article>
-                <!-- Post header-->
                 <header class="mb-4">
-                    <!-- Post title-->
                     <h1 class="fw-bolder mb-1">축구 AI</h1>
-                    <a>축구 관련 질문만 가능합니다.</a>
+                    <p>축구 관련 질문만 가능합니다.</p>
                 </header>
 
-                <!-- GPT 질문과 답변을 포함하는 통합 카드-->
                 <div class="card mb-4">
                     <div class="card-body">
-                        <!-- GPT 답변 출력 공간 -->
                         <div id="gptResponse" style="height: 300px; overflow-y: auto; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
-                            <!-- 질문 및 답변이 이곳에 추가됩니다. -->
                         </div>
 
-                        <!-- GPT 질문 입력 폼 -->
                         <form id="gptForm">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="userInput" placeholder="여기에 질문을 입력하세요" required />
-                                <button class="btn btn-primary" type="submit">질문 보내기</button>
+                                <button class="btn btn-primary" type="button" onclick="sendMessage()">질문 보내기</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </article>
-
         </div>
-        <!-- Side widgets-->
+
         <div class="col-lg-4">
             <div class="card mb-4">
-                <div class="card-header">Login</div>
-                <div class="card-body">
-                    <!-- 로그인 전 입력 폼 -->
-                    <div id="login-form">
-                        <div class="input-group mb-3">
-                            <!-- 아이디 입력 -->
-                            <input class="form-control" type="text" id="username" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <!-- 비밀번호 입력 -->
-                            <input class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
-                        </div>
-                        <!-- 로그인 버튼 -->
-                        <div class="d-grid">
-                            <button class="btn btn-primary" id="button-login" type="button">Login</button>
-                        </div>
-                        <!-- 회원가입 링크 추가 -->
-                        <div class="text-center mt-3">
-                            <a href="signup.html" class="text-decoration-none">회원가입</a>
-                        </div>
-                    </div>
 
-                    <!-- 로그인 후 닉네임을 표시할 영역 -->
-                    <div id="welcome-message" style="display: none;">
-                        <p>환영합니다, <span id="nickname"></span> 님!</p>
-                        <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
+
+<!-- 자동 질문 입력 및 출력을 위한 스크립트 -->
+<script>
+    window.onload = function() {
+        var question = localStorage.getItem("soccerAIQuestion");
+        if (question) {
+            // 질문을 입력창에 설정
+            document.getElementById("userInput").value = question;
+            // 저장된 질문으로 메시지를 자동 전송
+            sendMessage();
+            // 사용 후 질문 삭제
+            localStorage.removeItem("soccerAIQuestion");
+        }
+    }
+
+    // 챗봇 메시지 전송 함수
+    function sendMessage() {
+        const userMessage = document.getElementById('userInput').value;
+        document.getElementById('userInput').value = '';
+
+        const chatBox = document.getElementById('gptResponse');
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.classList.add('user-message');
+        userMsgDiv.innerText = userMessage;
+        chatBox.appendChild(userMsgDiv);
+
+        fetch('http://localhost:8080/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: userMessage })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.classList.add('bot-response');
+                botMsgDiv.innerText = data.response;
+                chatBox.appendChild(botMsgDiv);
+
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+
 <!-- Footer-->
 <footer class="py-5 bg-dark">
     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
 </footer>
+
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
 </body>
 </html>

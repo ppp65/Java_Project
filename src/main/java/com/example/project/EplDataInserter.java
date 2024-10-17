@@ -1,24 +1,23 @@
 package com.example.project;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Component
 public class EplDataInserter {
 
-    // 파일 경로를 static 폴더로 변경
-    private static final String FILE_PATH = "/Users/seungmin/IdeaProjects/Java_Project/src/main/resources/static/rank.html";
+    private static final String FILE_PATH = "static/rank.html";
 
     public void insertDataToHtml(List<String[]> rankings) throws IOException {
+        ClassPathResource resource = new ClassPathResource(FILE_PATH);
 
         // 파일 내용을 읽음
-        String htmlContent = new String(Files.readAllBytes(Paths.get(FILE_PATH)));
+        File file = resource.getFile();
+        String htmlContent = new String(Files.readAllBytes(file.toPath()));
 
         StringBuilder tableContent = new StringBuilder();
         for (String[] row : rankings) {
@@ -33,7 +32,7 @@ public class EplDataInserter {
         String updatedHtml = htmlContent.replaceAll("(?s)(<tbody id=\"ranking-table\">)(.*?)(</tbody>)", "$1" + tableContent.toString() + "$3");
 
         // 업데이트된 HTML을 파일로 저장
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(updatedHtml);
             System.out.println("HTML 파일이 성공적으로 업데이트되었습니다.");
         } catch (IOException e) {

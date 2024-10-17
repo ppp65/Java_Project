@@ -1,4 +1,13 @@
 // 회원가입 관련 코드 (유지)
+document.addEventListener("DOMContentLoaded", function() {
+    var buttonSearch = document.getElementById("button-search");
+    if (buttonSearch) {
+        buttonSearch.addEventListener("click", function() {
+            // 이벤트 핸들러 로직
+        });
+    }
+});
+
 document.getElementById("button-signup").addEventListener("click", function () {
     const nickname = document.getElementById("nickname").value;
     const username = document.getElementById("username").value;
@@ -123,3 +132,11 @@ document.getElementById("logout").addEventListener("click", function () {
             console.error('Error:', error);
         });
 });
+
+function sendToSoccerAI() {
+    var input = document.getElementById("searchInput").value;
+    localStorage.setItem("soccerAIQuestion", input);
+    window.location.href = "soccer%20ai.html";
+}
+
+
