@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EPL Schedule</title>
+</head>
+<body>
+<h1>EPL Schedule</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Score</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="schedule : ${schedules}">
+        <td th:text="${schedule.date}"></td>
+        <td th:text="${schedule.homeTeam}"></td>
+        <td th:text="${schedule.awayTeam}"></td>
+        <td th:text="${schedule.score}"></td>
+        <td th:text="${schedule.status}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
