@@ -42,32 +42,36 @@
                     <h1 class="fw-bolder mb-1">회원가입</h1>
                 </header>
                 <div class="card-body">
-                    <!-- 닉네임 입력 -->
-                    <a>닉네임을 입력하세요</a>
-                    <div class="input-group mb-3">
-                        <input class="form-control" type="text" placeholder="Enter nickname..." aria-label="닉네임을 입력하세요." aria-describedby="button-signup" />
-                    </div>
-                    <!-- 아이디 입력 -->
-                    <a>아이디를 입력하세요</a>
-                    <div class="input-group mb-3">
-                        <input class="form-control" type="text" placeholder="Enter username..." aria-label="아이디를 입력하세요." aria-describedby="button-signup" />
-                    </div>
-                    <!-- 비밀번호 입력 -->
-                    <a>비밀번호를 입력하세요</a>
-                    <div class="input-group mb-3">
-                        <input class="form-control" type="password" placeholder="Enter password..." aria-label="패스워드를 입력하세요" aria-describedby="button-signup" />
-                    </div>
-                    <!-- 비밀번호 확인 입력 -->
-                    <a>비밀번호를 재입력하세요</a>
-                    <div class="input-group mb-3">
-                        <input class="form-control" type="password" placeholder="Confirm password..." aria-label="위에 적은 패스워드와 같은 패스워드를 입력하세요" aria-describedby="button-signup" />
-                    </div>
-                    <!-- 회원가입 버튼 -->
-                    <div class="d-grid">
-                        <button class="btn btn-primary" id="button-signup" type="button">회원가입</button>
-                    </div>
+                    <form action="/member/save" method="post">
+                        <!-- 닉네임 입력 -->
+                        <a>닉네임을 입력하세요</a>
+                        <div class="input-group mb-3">
+                            <input name="memberName" class="form-control" type="text" placeholder="Enter nickname..." aria-label="닉네임을 입력하세요." aria-describedby="button-signup" />
+                        </div>
+                        <!-- 아이디 입력 -->
+                        <a>아이디를 입력하세요</a>
+                        <div class="input-group mb-3">
+                            <input name="memberID" class="form-control" type="text" placeholder="Enter username..." aria-label="아이디를 입력하세요." aria-describedby="button-signup" />
+                        </div>
+                        <!-- 비밀번호 입력 -->
+                        <a>비밀번호를 입력하세요</a>
+                        <div class="input-group mb-3">
+                            <input name="memberPassword" class="form-control" type="password" placeholder="Enter password..." aria-label="패스워드를 입력하세요" aria-describedby="button-signup" />
+                        </div>
+                        <!-- 비밀번호 확인 입력 -->
+                        <a>비밀번호를 재입력하세요</a>
+                        <div class="input-group mb-3">
+                            <input name="memberPasswordConfirm" class="form-control" type="password" placeholder="Confirm password..." aria-label="위에 적은 패스워드와 같은 패스워드를 입력하세요" aria-describedby="button-signup" />
+                        </div>
+                        <!-- 회원가입 버튼 -->
+                        <div class="d-grid">
+                            <input class="btn btn-primary" id="button-signup" type="submit" value="회원가입">
+                        </div>
+                    </form>
                 </div>
+            </article>
         </div>
+    </div>
 </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <!-- Footer-->

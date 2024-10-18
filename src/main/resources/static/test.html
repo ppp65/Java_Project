@@ -44,18 +44,20 @@
                 <div class="card-body">
                     <!-- 로그인 전 입력 폼 -->
                     <div id="login-form">
-                        <div class="input-group mb-3">
-                            <!-- 아이디 입력 -->
-                            <input class="form-control" type="text" id="username" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <!-- 비밀번호 입력 -->
-                            <input class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
-                        </div>
-                        <!-- 로그인 버튼 -->
-                        <div class="d-grid">
-                            <button class="btn btn-primary" id="button-login" type="button">Login</button>
-                        </div>
+                        <form action="member/save" method="post">
+                            <div class="input-group mb-3">
+                                <!-- 아이디 입력 -->
+                                <input name="memberID" class="form-control" type="text" id="username" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <!-- 비밀번호 입력 -->
+                                <input name="memberPassword" class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
+                            </div>
+                            <!-- 로그인 버튼 -->
+                            <div class="d-grid">
+                                <input class="btn btn-primary" id="button-login" type="button" value="로그인">
+                            </div>
+                        </form>
                         <!-- 회원가입 링크 추가 -->
                         <div class="text-center mt-3">
                             <a href="signup.html" class="text-decoration-none">회원가입</a>
