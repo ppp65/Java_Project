@@ -20,7 +20,7 @@ public class MemberController {
             memberService.save(memberDTO);
         }
         else {
-            return "signup";
+            return null;
         }
         return null;
     }
@@ -31,7 +31,7 @@ public class MemberController {
         if(loginResult != null) {
             //login 성공
             session.setAttribute("loginId", loginResult.getMemberId());
-            return "index";
+            return null;
         }
         else{
             //login 실패
