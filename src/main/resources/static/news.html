@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>EPL Insight 뉴스</title>
+  <title>EPL Insight 회원가입</title>
   <!-- Favicon-->
   <link href="css/styles.css" rel="stylesheet" />
 </head>
@@ -33,69 +33,93 @@
 <!-- Page content-->
 <div class="container mt-5">
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
+      <!-- Post content-->
       <article>
         <!-- Post header-->
         <header class="mb-4">
           <!-- Post title-->
-          <h1 class="fw-bolder mb-1">뉴스</h1>
+          <h1 class="fw-bolder mb-1">회원가입</h1>
         </header>
-
-      </article>
-
-    </div>
-    <!-- Side widgets-->
-    <div class="col-lg-4">
-      <div class="card mb-4">
-        <div class="card-header">Login</div>
         <div class="card-body">
-          <!-- 로그인 전 입력 폼 -->
-          <div id="login-form">
-            <div class="input-group mb-3">
-              <!-- 아이디 입력 -->
-              <input class="form-control" type="text" id="username" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
-            </div>
-            <div class="input-group mb-3">
-              <!-- 비밀번호 입력 -->
-              <input class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
-            </div>
-            <!-- 로그인 버튼 -->
-            <div class="d-grid">
-              <button class="btn btn-primary" id="button-login" type="button">Login</button>
-            </div>
-            <!-- 회원가입 링크 추가 -->
-            <div class="text-center mt-3">
-              <a href="signup.html" class="text-decoration-none">회원가입</a>
-            </div>
+          <!-- 닉네임 입력 -->
+          <a>닉네임을 입력하세요</a>
+          <div class="input-group mb-3">
+            <input class="form-control" id="nickname" type="text" placeholder="Enter nickname..." aria-label="닉네임을 입력하세요." aria-describedby="button-signup" />
           </div>
-
-          <!-- 로그인 후 닉네임을 표시할 영역 -->
-          <div id="welcome-message" style="display: none;">
-            <p>환영합니다, <span id="nickname"></span> 님!</p>
-            <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
+          <!-- 아이디 입력 -->
+          <a>아이디를 입력하세요</a>
+          <div class="input-group mb-3">
+            <input class="form-control" id="username" type="text" placeholder="Enter username..." aria-label="아이디를 입력하세요." aria-describedby="button-signup" />
+          </div>
+          <!-- 비밀번호 입력 -->
+          <a>비밀번호를 입력하세요</a>
+          <div class="input-group mb-3">
+            <input class="form-control" id="password" type="password" placeholder="Enter password..." aria-label="패스워드를 입력하세요" aria-describedby="button-signup" />
+          </div>
+          <!-- 비밀번호 확인 입력 -->
+          <a>비밀번호를 재입력하세요</a>
+          <div class="input-group mb-3">
+            <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm password..." aria-label="위에 적은 패스워드와 같은 패스워드를 입력하세요" aria-describedby="button-signup" />
+          </div>
+          <!-- 회원가입 버튼 -->
+          <div class="d-grid">
+            <button class="btn btn-primary" id="button-signup" type="button">회원가입</button>
           </div>
         </div>
-      </div>
-      <!-- Search widget-->
-      <div class="card mb-4">
-        <div class="card-header">Search</div>
-        <div class="card-body">
-          <div class="input-group">
-            <input class="form-control" type="text" id="searchInput" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-            <button class="btn btn-primary" id="button-search" type="button" onclick="sendToSoccerAI()">Go!</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
-</div>
-<!-- Footer-->
-<footer class="py-5 bg-dark">
-  <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-</footer>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <!-- Footer-->
+  <footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+  </footer>
+  <!-- Bootstrap core JS-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Core theme JS-->
+  <script src="js/scripts.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("button-signup").addEventListener("click", function() {
+        var nickname = document.getElementById("nickname").value;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+
+        // 비밀번호 확인
+        if (password !== confirmPassword) {
+          alert("비밀번호가 일치하지 않습니다.");
+          return;
+        }
+
+        // AJAX 요청을 서버로 전송
+        fetch("/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: username,
+            username: nickname,
+            password: password,
+            email: "",  // 이메일 입력을 추가하려면 여기에도 추가하세요.
+            role: "USER"
+          }),
+        })
+                .then(response => {
+                  if (response.ok) {
+                    alert("회원가입이 성공적으로 완료되었습니다.");
+                    window.location.href = "/login";
+                  } else {
+                    alert("회원가입에 실패했습니다.");
+                  }
+                })
+                .catch(error => {
+                  console.error("Error:", error);
+                  alert("서버와의 통신 중 오류가 발생했습니다.");
+                });
+      });
+    });
+  </script>
 </body>
 </html>
