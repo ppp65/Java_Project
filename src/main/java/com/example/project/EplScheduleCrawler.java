@@ -111,6 +111,11 @@ public class EplScheduleCrawler {
                     String awayTeam = row.select("td[data-stat='away_team']").text(); // 상대팀
                     String venue = row.select("td[data-stat='venue']").text(); // 경기장
 
+                    // 스코어가 비어있을 경우 "경기 전"으로 설정
+                    if (score.isEmpty()) {
+                        score = "경기 전";
+                    }
+
                     // 날짜가 비어있을 경우, 이전 날짜 유지
                     if (date.isEmpty()) {
                         date = previousDate;
@@ -152,11 +157,17 @@ public class EplScheduleCrawler {
 
                     // 시간이 없는 경우 날짜와 시간을 지우고 스타일 적용
                     if (time.equals("시간 미정")) {
-                        writer.write("<tr class='highlight'><td colspan='2'></td><td>" + homeTeam + "</td><td>" + score + "</td><td>" + awayTeam + "</td><td>" + venue + "</td></tr>");
+                        // 스코어가 "경기 전"인 경우, 스코어를 출력하지 않음
+                        if (score.equals("경기 전")) {
+                            writer.write("<tr class='highlight'><td colspan='2'></td><td>" + homeTeam + "</td><td></td><td>" + awayTeam + "</td><td>" + venue + "</td></tr>");
+                        } else {
+                            writer.write("<tr class='highlight'><td colspan='2'></td><td>" + homeTeam + "</td><td>" + score + "</td><td>" + awayTeam + "</td><td>" + venue + "</td></tr>");
+                        }
                     } else {
                         // 시간이 있는 경우 정상 출력
                         writer.write("<tr><td>" + date + "</td><td>" + time + "</td><td>" + homeTeam + "</td><td>" + score + "</td><td>" + awayTeam + "</td><td>" + venue + "</td></tr>");
                     }
+
                 }
 
                 // HTML 파일 마무리
