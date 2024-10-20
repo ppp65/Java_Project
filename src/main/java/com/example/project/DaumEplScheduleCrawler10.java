@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class DaumEplScheduleCrawlerWithIcons {
+public class DaumEplScheduleCrawler10 {
 
     public static void main(String[] args) {
         // WebDriver 설정
@@ -18,10 +18,10 @@ public class DaumEplScheduleCrawlerWithIcons {
         WebDriver driver = new ChromeDriver();
 
         // Daum 스포츠 EPL 일정 페이지 URL
-        String baseUrl = "https://sports.daum.net/schedule/epl?date=202409";
+        String baseUrl = "https://sports.daum.net/schedule/epl?date=202410";
 
         // 출력할 HTML 파일 경로
-        String filePath = Paths.get("DaumEplScheduleWithIcons.html").toAbsolutePath().toString();
+        String filePath = Paths.get("DaumEplSchedule10.html").toAbsolutePath().toString();
 
         try {
             // HTML 파일 작성 시작
