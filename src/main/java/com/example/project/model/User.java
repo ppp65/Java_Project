@@ -27,8 +27,13 @@ public class User {
 
     @Column(name = "POINTS", nullable = false)
     private int points;
+
     @Column(name = "LAST_LOGIN_DATE")
     private LocalDate lastLoginDate;
+
+    @Column(name = "NICKNAME_COLOR")
+    private String nicknameColor;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -89,5 +94,13 @@ public class User {
 
     public void setLastLoginDate(LocalDate lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public String getNicknameColor() {
+        return nicknameColor;
+    }
+
+    public void setNicknameColor(String nicknameColor) {
+        this.nicknameColor = nicknameColor;
     }
 }

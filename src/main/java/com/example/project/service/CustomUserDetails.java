@@ -10,13 +10,15 @@ public class CustomUserDetails implements UserDetails {
     private final String username;
     private final String password;
     private final int points;
+    private final String nicknameColor;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String userId, String username, String password, int points, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String userId, String username, String password, int points, String nicknameColor, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        this.points = points;  // 포인트 값 설정
+        this.points = points;
+        this.nicknameColor = nicknameColor;
         this.authorities = authorities;
     }
 
@@ -24,8 +26,12 @@ public class CustomUserDetails implements UserDetails {
         return userId;
     }
 
-    public int getPoints() {  // 포인트를 반환하는 getter 메서드
+    public int getPoints() {
         return points;
+    }
+
+    public String getNicknameColor() {
+        return nicknameColor;
     }
 
     @Override

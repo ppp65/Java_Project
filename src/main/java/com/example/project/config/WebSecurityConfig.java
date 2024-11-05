@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
@@ -28,10 +29,10 @@ public class WebSecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("*")); // 요청을 보내는 프론트엔드의 주소
+                    corsConfiguration.setAllowedOrigins(List.of("*"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setAllowCredentials(true); // 인증 정보를 포함
+                    corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
                 .csrf(csrf -> csrf.disable())
@@ -40,8 +41,11 @@ public class WebSecurityConfig {
                                 .requestMatchers("/", "/index.html", "/rank.html", "/signup.html", "/css/**", "/js/**", "/api/check-auth", "/api/signup").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(customAuthenticationEntryPoint())
+                )
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED) // 필요한 경우 세션 생성
+                        session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
                 )
                 .formLogin(form ->
                         form
@@ -57,8 +61,8 @@ public class WebSecurityConfig {
                         logout
                                 .logoutUrl("/api/logout")
                                 .logoutSuccessUrl("/index.html")
-                                .invalidateHttpSession(true) // 로그아웃 시 세션 무효화
-                                .deleteCookies("JSESSIONID") // 로그아웃 시 쿠키 삭제
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID")
                                 .permitAll()
                 );
 
@@ -66,18 +70,19 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public AuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.sendRedirect("/index.html?message=login_required");
+        };
+    }
+
+    @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            // Spring Security의 SecurityContext에 사용자 정보 저장
             var securityContext = org.springframework.security.core.context.SecurityContextHolder.getContext();
             securityContext.setAuthentication(authentication);
-
-            // HttpSession에 SecurityContext 저장
             request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-
-            // 사용자 이름을 세션에 추가
             request.getSession().setAttribute("user", authentication.getName());
-
             response.setStatus(200);
             response.getWriter().write("{\"message\": \"로그인 성공\"}");
         };
@@ -96,7 +101,7 @@ public class WebSecurityConfig {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
         serializer.setSameSite("None");
         serializer.setUseHttpOnlyCookie(false);
-        serializer.setUseSecureCookie(false);  // 개발 환경에서 HTTP를 사용 중인 경우 false로 설정
+        serializer.setUseSecureCookie(false);
         return serializer;
     }
 }
