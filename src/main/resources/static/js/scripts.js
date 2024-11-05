@@ -1,39 +1,88 @@
-document.getElementById("button-signup").addEventListener("click", function () {
-    const userId = document.getElementById("userId").value; // HTML에 맞게 "userId"로 수정
-    const username = document.getElementById("username").value;
+document.getElementById("button-login").addEventListener("click", function() {
+    const userId = document.getElementById("user_id").value;
     const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
 
-    if (password !== confirmPassword) {
-        alert("비밀번호가 일치하지 않습니다!");
-        return;
-    }
-
-    if (!userId || !username || !password) {
-        alert("모든 필드를 입력해 주세요.");
-        return;
-    }
-
-    const signupData = {
-        userId: userId,  // userId 추가
-        username: username,
-        password: password
-    };
-
-    fetch("/api/auth/signup", {
+    fetch("/api/login", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(signupData)
+        body: `user_id=${userId}&password=${password}`,
+        credentials: "include"
     })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-        })
-        .catch(error => console.error("Error:", error));
+        .then(response => {
+            if (response.ok) {
+                fetch("/api/check-auth", {
+                    method: "GET",
+                    credentials: "include"
+                }).then(authResponse => {
+                    if (authResponse.ok) {
+                        authResponse.json().then(data => {
+                            document.getElementById("login-form").style.display = "none";
+                            document.getElementById("welcome-message").style.display = "block";
+                            document.getElementById("username").innerText = data.username ? data.username : userId;
+                            document.getElementById("point").innerText = data.points !== undefined ? data.points : "0";
+                            sessionStorage.setItem("isAuthenticated", "true");
+                            sessionStorage.setItem("points", data.points);
+                        });
+                    } else {
+                        alert("인증 실패. 다시 로그인하세요.");
+                    }
+                }).catch(error => {
+                    console.error("인증 상태 확인 중 오류 발생:", error);
+                });
+            } else {
+                alert("로그인 실패. 아이디와 비밀번호를 확인하세요.");
+            }
+        });
 });
 
+document.getElementById("logout").addEventListener("click", function() {
+    fetch("/api/logout", {
+        method: "POST",
+        credentials: "include"
+    }).then(() => {
+        document.getElementById("login-form").style.display = "block";
+        document.getElementById("welcome-message").style.display = "none";
+
+        document.getElementById("username").innerText = "";
+        sessionStorage.removeItem("isAuthenticated");
+    });
+});
+
+window.onload = function() {
+    if (sessionStorage.getItem("isAuthenticated") === "true") {
+        fetch("/api/check-auth", {
+            method: "GET",
+            credentials: "include"
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    document.getElementById("login-form").style.display = "none";
+                    document.getElementById("welcome-message").style.display = "block";
+                    document.getElementById("username").innerText = data.username ? data.username : "";
+
+                    const points = sessionStorage.getItem("points") || data.points;
+                    document.getElementById("point").innerText = points;
+                });
+            } else {
+                document.getElementById("login-form").style.display = "block";
+                document.getElementById("welcome-message").style.display = "none";
+                sessionStorage.removeItem("isAuthenticated");
+                sessionStorage.removeItem("points");
+            }
+        }).catch(error => {
+            console.error("인증 상태 확인 중 오류 발생:", error);
+            document.getElementById("login-form").style.display = "block";
+            document.getElementById("welcome-message").style.display = "none";
+            sessionStorage.removeItem("isAuthenticated");
+            sessionStorage.removeItem("points");
+        });
+    } else {
+        document.getElementById("login-form").style.display = "block";
+        document.getElementById("welcome-message").style.display = "none";
+    }
+};
 
 
 function sendToSoccerAI() {
@@ -41,18 +90,3 @@ function sendToSoccerAI() {
     localStorage.setItem("soccerAIQuestion", input);
     window.location.href = "soccer%20ai.html";
 }
-
-fetch("/api/auth/current-user", {
-    method: "GET",
-    credentials: "include",  // 세션 쿠키를 포함하여 요청
-    headers: {
-        "Content-Type": "application/json"
-    }
-})
-fetch("http://localhost:8080/perform_login", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ userId: userId, password: password })
-})

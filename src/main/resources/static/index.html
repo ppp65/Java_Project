@@ -129,10 +129,11 @@
                     <!-- 로그인 후 닉네임을 표시할 영역 -->
                     <div id="welcome-message" style="display: none;">
                         <p>환영합니다, <span id="username"></span> 님!</p>
+                        <p>포인트 :  <span id="point"></span></p>
                         <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
                     </div>
-
                 </div>
+
             </div>
             <!-- Search widget-->
             <div class="card mb-4">
@@ -155,42 +156,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
 <script src="js/scripts.js" defer></script>
-<script>
-document.getElementById("button-login").addEventListener("click", function () {
-const userId = document.getElementById("user_id").value;
-const password = document.getElementById("password").value;
 
-if (!userId || !password) {
-alert("아이디와 비밀번호를 입력해주세요.");
-return;
-}
-
-// AJAX를 통해 로그인 요청
-fetch("/perform_login", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({ userId: userId, password: password })
-})
-.then(response => {
-if (response.ok) {
-return fetch("/api/auth/current-user");  // '/api/auth/current-user'로 수정
-} else {
-throw new Error("로그인 실패");
-}
-})
-.then(response => response.text())
-.then(username => {
-document.getElementById("login-form").style.display = "none";
-document.getElementById("welcome-message").style.display = "block";
-document.getElementById("username").textContent = username;  // 사용자 이름 표시
-})
-.catch(error => {
-alert("로그인에 실패했습니다. 다시 시도해주세요.");
-console.error("Error:", error);
-});
-});
-</script>
 </body>
 </html>
