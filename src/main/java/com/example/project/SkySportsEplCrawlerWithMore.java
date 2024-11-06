@@ -1,25 +1,25 @@
 package com.example.project;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.springframework.stereotype.Component;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class SkySportsEplCrawlerWithMore {
-    public static void main(String[] args) {
+
+    public void run() {
         // WebDriver 설정
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");  // 백그라운드에서 실행
+        options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
 
         try {

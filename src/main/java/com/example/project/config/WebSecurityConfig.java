@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/", "/index.html", "/rank.html", "/signup.html", "/css/**", "/js/**", "/api/check-auth", "/api/signup").permitAll()
+                                .requestMatchers("/", "/index.html", "/rank.html", "/signup.html", "/css/**", "/js/**", "/api/check-auth", "/api/signup", "/schedule.html").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception ->

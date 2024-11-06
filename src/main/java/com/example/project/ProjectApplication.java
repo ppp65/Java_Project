@@ -11,11 +11,16 @@ import java.util.List;
 public class ProjectApplication implements CommandLineRunner {
 
     @Autowired
-    private EplDataCrawler eplDataCrawler;           // 순위 크롤러
+    private EplDataCrawler eplDataCrawler;
 
     @Autowired
-    private EplDataInserter eplDataInserter;         // 순위 데이터를 HTML로 저장하는 서비스
+    private EplDataInserter eplDataInserter;
 
+    @Autowired
+    private DaumEplScheduleCrawlerAllMonths daumEplScheduleCrawlerAllMonths;
+
+    @Autowired
+    private SkySportsEplCrawlerWithMore skySportsEplCrawlerWithMore;
 
     public static void main(String[] args) {
         SpringApplication.run(ProjectApplication.class, args);
@@ -23,18 +28,18 @@ public class ProjectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 1. 순위 크롤러 실행
+        // 순위 크롤러 실행
         List<String[]> rankings = eplDataCrawler.getEplRankings();
-
-        // 순위 크롤링 데이터 출력
         for (String[] row : rankings) {
             System.out.println("순위 데이터: " + String.join(", ", row));
         }
-
-        // 순위 데이터를 HTML 파일로 저장
         eplDataInserter.insertDataToHtml(rankings);
         System.out.println("순위 데이터 HTML 파일이 성공적으로 업데이트되었습니다.");
 
+        // DaumEplScheduleCrawlerAllMonths 실행
+        daumEplScheduleCrawlerAllMonths.run();
 
+        // SkySportsEplCrawlerWithMore 실행
+        skySportsEplCrawlerWithMore.run();
     }
 }

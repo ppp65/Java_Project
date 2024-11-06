@@ -3,6 +3,7 @@ package com.example.project;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -10,9 +11,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+@Component
 public class DaumEplScheduleCrawlerAllMonths {
 
-    public static void main(String[] args) {
+    public void run() {
         // WebDriver 설정
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
