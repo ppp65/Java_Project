@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
     <title>EPL Insight 일정</title>
-    <!-- Favicon-->
     <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
-<!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="index.html">EPL Insight</a>
@@ -21,9 +17,9 @@
                 <li class="nav-item"><a class="nav-link" href="schedule.html">일정</a></li>
                 <li class="nav-item"><a class="nav-link" href="news.html">뉴스</a></li>
                 <li class="nav-item"><a class="nav-link" href="highlights.html">하이라이트</a></li>
-                <li class="nav-item"><a class="nav-link" href="match%20prediction.html">승부 예측</a></li>
+                <li class="nav-item"><a class="nav-link" href="match_prediction.html">승부 예측</a></li>
                 <li class="nav-item"><a class="nav-link" href="community.html">커뮤니티</a></li>
-                <li class="nav-item"><a class="nav-link" href="soccer%20ai.html">축구 AI</a></li>
+                <li class="nav-item"><a class="nav-link" href="soccer_ai.html">축구 AI</a></li>
                 <li class="nav-item"><a class="nav-link" href="point.html">포인트 상점</a></li>
                 <li class="nav-item"><a class="nav-link" href="information.html">내정보</a></li>
             </ul>
@@ -31,33 +27,36 @@
     </div>
 </nav>
 
-<!-- Page content-->
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-8">
             <h1 class="fw-bolder mb-1">경기 일정</h1>
-            <!-- 경기 일정 표 추가 -->
+            <div id="month-buttons">
+                <button onclick="filterByMonth('08')">8월</button>
+                <button onclick="filterByMonth('09')">9월</button>
+                <button onclick="filterByMonth('10')">10월</button>
+                <button onclick="filterByMonth('11')">11월</button>
+                <button onclick="filterByMonth('12')">12월</button>
+                <button onclick="filterByMonth('01')">1월</button>
+                <button onclick="filterByMonth('02')">2월</button>
+                <button onclick="filterByMonth('03')">3월</button>
+                <button onclick="filterByMonth('04')">4월</button>
+                <button onclick="filterByMonth('05')">5월</button>
+            </div>
+
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>날짜</th>
-                    <th>시간</th>
+                    <th>경기 시간</th>
+                    <th>경기장</th>
                     <th>홈팀</th>
                     <th>스코어</th>
-                    <th>상대팀</th>
-                    <th>장소</th>
+                    <th>원정팀</th>
                 </tr>
                 </thead>
-                <tbody>
-                <!-- 경기 데이터를 반복 출력 -->
-                <tr th:each="match : ${matches}">
-                    <td th:text="${match.date}">날짜</td>
-                    <td th:text="${match.time}">시간</td>
-                    <td th:text="${match.homeTeam}">홈팀</td>
-                    <td th:text="${match.score}">스코어</td>
-                    <td th:text="${match.awayTeam}">상대팀</td>
-                    <td th:text="${match.venue}">장소</td>
-                </tr>
+                <tbody id="schedule-table">
+                <!-- 서버에서 경기 일정 데이터를 가져와 여기에 삽입합니다. -->
                 </tbody>
             </table>
         </div>
@@ -114,9 +113,55 @@
     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
 </footer>
 
-<!-- Bootstrap core JS-->
+<!-- JavaScript 코드 -->
+<script>
+    let allMatches = [];
+
+    async function fetchScheduleData() {
+        try {
+            const response = await fetch('/api/schedule');
+            allMatches = await response.json();
+            filterByMonth('08');
+        } catch (error) {
+            console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
+        }
+    }
+
+    function filterByMonth(month) {
+        const scheduleTable = document.getElementById("schedule-table");
+        scheduleTable.innerHTML = "";
+
+        const filteredMatches = allMatches.filter(match => match.date.startsWith(month));
+
+        let currentRowDate = "";
+
+        filteredMatches.forEach(match => {
+            const row = document.createElement("tr");
+
+            if (currentRowDate !== match.date) {
+                currentRowDate = match.date;
+                row.innerHTML += `<td rowspan="${filteredMatches.filter(m => m.date === match.date).length}">${match.date}</td>`;
+            } else {
+                row.innerHTML += `<td></td>`;
+            }
+
+            row.innerHTML += `
+                <td>${match.time}</td>
+                <td>${match.stadium}</td>
+                <td><img src="${match.homeTeamIcon}" alt="${match.homeTeam}" style="width:20px; height:20px; vertical-align:middle;"> ${match.homeTeam}</td>
+                <td>${match.score}</td>
+                <td><img src="${match.awayTeamIcon}" alt="${match.awayTeam}" style="width:20px; height:20px; vertical-align:middle;"> ${match.awayTeam}</td>
+            `;
+            scheduleTable.appendChild(row);
+        });
+    }
+
+    window.onload = fetchScheduleData;
+</script>
+
+<!-- Bootstrap core JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
+<!-- Core theme JS -->
 <script src="js/scripts.js"></script>
 </body>
 </html>

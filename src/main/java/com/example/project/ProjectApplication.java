@@ -20,6 +20,9 @@ public class ProjectApplication implements CommandLineRunner {
     private DaumEplScheduleCrawlerAllMonths daumEplScheduleCrawlerAllMonths;
 
     @Autowired
+    private EplScheduleInserter eplScheduleInserter;
+
+    @Autowired
     private SkySportsEplCrawlerWithMore skySportsEplCrawlerWithMore;
 
     public static void main(String[] args) {
@@ -28,18 +31,17 @@ public class ProjectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 순위 크롤러 실행
+        // 1. 순위 크롤러 실행
         List<String[]> rankings = eplDataCrawler.getEplRankings();
-        for (String[] row : rankings) {
-            System.out.println("순위 데이터: " + String.join(", ", row));
-        }
         eplDataInserter.insertDataToHtml(rankings);
         System.out.println("순위 데이터 HTML 파일이 성공적으로 업데이트되었습니다.");
 
-        // DaumEplScheduleCrawlerAllMonths 실행
-        daumEplScheduleCrawlerAllMonths.run();
+        // 2. 일정 크롤러 실행
+        List<MatchDto> scheduleData = daumEplScheduleCrawlerAllMonths.getSchedule();
+        eplScheduleInserter.insertScheduleToHtml(scheduleData);
+        System.out.println("schedule.html 파일이 성공적으로 업데이트되었습니다.");
 
-        // SkySportsEplCrawlerWithMore 실행
+        // 3. SkySportsEplCrawlerWithMore 실행 (별도로 처리 필요 시 추가 작업)
         skySportsEplCrawlerWithMore.run();
     }
 }
