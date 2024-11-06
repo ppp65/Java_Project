@@ -5,25 +5,28 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Component
-public class DaumEplScheduleCrawlerAllMonths {
+public class Schedule {
 
-    public List<MatchDto> getSchedule() {
+    public void executeCrawling() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
-        List<MatchDto> allMatches = new ArrayList<>();
 
+        String filePath = Paths.get("src/main/resources/static/schedule.html").toAbsolutePath().toString();
         String[] months = {"202408", "202409", "202410", "202411", "202412", "202501", "202502", "202503", "202504", "202505"};
+
+        StringBuilder tableContent = new StringBuilder();
 
         try {
             for (String month : months) {
                 String baseUrl = "https://sports.daum.net/schedule/epl?date=" + month;
                 driver.get(baseUrl);
 
-                // 페이지 끝까지 스크롤
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 long lastHeight = (long) js.executeScript("return document.body.scrollHeight");
 
@@ -37,13 +40,25 @@ public class DaumEplScheduleCrawlerAllMonths {
                     lastHeight = newHeight;
                 }
 
-                // 경기 정보를 가져오는 부분
                 WebElement tbodyElement = driver.findElement(By.id("scheduleList"));
                 List<WebElement> matchElements = tbodyElement.findElements(By.tagName("tr"));
-                String currentDate = "";
 
-                for (WebElement match : matchElements) {
+                String currentDate = "";
+                int rowspan = 0;
+
+                for (int i = 0; i < matchElements.size(); i++) {
+                    WebElement match = matchElements.get(i);
+
                     if (!match.findElements(By.cssSelector("td.td_date")).isEmpty()) {
+                        rowspan = 1;
+                        for (int j = i + 1; j < matchElements.size(); j++) {
+                            WebElement nextMatch = matchElements.get(j);
+                            if (nextMatch.findElements(By.cssSelector("td.td_date")).isEmpty()) {
+                                rowspan++;
+                            } else {
+                                break;
+                            }
+                        }
                         currentDate = match.findElement(By.cssSelector("td.td_date span.num_date")).getText();
                     }
 
@@ -55,12 +70,10 @@ public class DaumEplScheduleCrawlerAllMonths {
                     String stadium = match.findElement(By.cssSelector("td.td_area")).getText().trim();
 
                     WebElement homeTeamElement = match.findElement(By.cssSelector("div.team_home"));
-                    String homeTeam = homeTeamElement.findElement(By.cssSelector("span.txt_team")).getText();
-                    String homeTeamIcon = homeTeamElement.findElement(By.cssSelector("span.wrap_thumb img")).getAttribute("src");
+                    String homeTeamName = homeTeamElement.findElement(By.cssSelector("span.txt_team")).getText();
 
                     WebElement awayTeamElement = match.findElement(By.cssSelector("div.team_away"));
-                    String awayTeam = awayTeamElement.findElement(By.cssSelector("span.txt_team")).getText();
-                    String awayTeamIcon = awayTeamElement.findElement(By.cssSelector("span.wrap_thumb img")).getAttribute("src");
+                    String awayTeamName = awayTeamElement.findElement(By.cssSelector("span.txt_team")).getText();
 
                     String matchStatus = match.findElement(By.cssSelector("span.state_game")).getText();
                     String score = "경기 전";
@@ -70,16 +83,34 @@ public class DaumEplScheduleCrawlerAllMonths {
                         score = homeScore + " : " + awayScore;
                     }
 
-                    // MatchDto 객체로 추가
-                    allMatches.add(new MatchDto(currentDate, time, stadium, homeTeam, homeTeamIcon, score, awayTeam, awayTeamIcon));
+                    if (!match.findElements(By.cssSelector("td.td_date")).isEmpty()) {
+                        tableContent.append("<tr><td rowspan=\"" + rowspan + "\">" + currentDate + "</td><td>" + time + "</td><td>" + stadium + "</td><td>" + homeTeamName + "</td><td>" + score + "</td><td>" + awayTeamName + "</td></tr>");
+                    } else {
+                        tableContent.append("<tr><td>" + time + "</td><td>" + stadium + "</td><td>" + homeTeamName + "</td><td>" + score + "</td><td>" + awayTeamName + "</td></tr>");
+                    }
                 }
             }
-        } catch (InterruptedException e) {
+            updateHtmlFile(filePath, tableContent.toString());
+            System.out.println("EPL 전체 시즌 일정 크롤링 완료: " + filePath);
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
             driver.quit();
         }
+    }
 
-        return allMatches; // 크롤링한 경기 일정 리스트 반환
+    private static void updateHtmlFile(String filePath, String tableContent) throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
+                if (line.contains("<tbody id=\"schedule-table\">")) {
+                    writer.write(tableContent);
+                    writer.newLine();
+                }
+            }
+        }
     }
 }

@@ -17,10 +17,7 @@ public class ProjectApplication implements CommandLineRunner {
     private EplDataInserter eplDataInserter;
 
     @Autowired
-    private DaumEplScheduleCrawlerAllMonths daumEplScheduleCrawlerAllMonths;
-
-    @Autowired
-    private EplScheduleInserter eplScheduleInserter;
+    private Schedule schedule;
 
     @Autowired
     private SkySportsEplCrawlerWithMore skySportsEplCrawlerWithMore;
@@ -37,11 +34,9 @@ public class ProjectApplication implements CommandLineRunner {
         System.out.println("순위 데이터 HTML 파일이 성공적으로 업데이트되었습니다.");
 
         // 2. 일정 크롤러 실행
-        List<MatchDto> scheduleData = daumEplScheduleCrawlerAllMonths.getSchedule();
-        eplScheduleInserter.insertScheduleToHtml(scheduleData);
-        System.out.println("schedule.html 파일이 성공적으로 업데이트되었습니다.");
+        schedule.executeCrawling();
 
         // 3. SkySportsEplCrawlerWithMore 실행 (별도로 처리 필요 시 추가 작업)
-        skySportsEplCrawlerWithMore.run();
+        skySportsEplCrawlerWithMore.getNews();
     }
 }
