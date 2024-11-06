@@ -5,22 +5,25 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.springframework.stereotype.Component;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.text.ParseException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Component
 public class SkySportsEplCrawlerWithMore {
 
-    public List<NewsDto> getNews() {
+    public void executeCrawling() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
-        List<NewsDto> newsList = new ArrayList<>();
+
+        StringBuilder newsContent = new StringBuilder();
+        String filePath = Paths.get("src/main/resources/static/news.html").toAbsolutePath().toString();
 
         try {
             String url = "https://www.skysports.com/premier-league-news";
@@ -42,15 +45,22 @@ public class SkySportsEplCrawlerWithMore {
                 String author = authorElement.getText();
                 String date = formatDate(dateElement.getText());
 
-                newsList.add(new NewsDto(title, link, imageUrl, snippet, author, date));
+                newsContent.append("<li><div style='display: flex; align-items: center; margin-bottom: 20px;'>");
+                newsContent.append("<a href='" + link + "' target='_blank'><img src='" + imageUrl + "' alt='News Image' style='width:300px; height:auto; margin-right: 20px;'></a>");
+                newsContent.append("<div><h2><a href='" + link + "' target='_blank'>" + title + "</a></h2>");
+                newsContent.append("<p><strong>Author:</strong> " + author + "</p>");
+                newsContent.append("<p><strong>Published:</strong> " + date + "</p>");
+                newsContent.append("<p>" + snippet + "</p></div></div></li>");
             }
+
+            updateHtmlFile(filePath, newsContent.toString());
+            System.out.println("크롤링 완료! news.html 파일이 성공적으로 업데이트되었습니다.");
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             driver.quit();
         }
-
-        return newsList; // 크롤링한 뉴스 데이터 리스트 반환
     }
 
     private static String formatDate(String dateStr) {
@@ -59,10 +69,33 @@ public class SkySportsEplCrawlerWithMore {
             Date date = inputFormat.parse(dateStr);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd");
             return outputFormat.format(date);
-
         } catch (ParseException e) {
             e.printStackTrace();
             return dateStr;
+        }
+    }
+
+    private static void updateHtmlFile(String filePath, String newsContent) throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            boolean insideNewsList = false;
+
+            for (String line : lines) {
+                if (line.contains("<ul id=\"news-list\">")) {
+                    writer.write(line);
+                    writer.newLine();
+                    writer.write(newsContent);
+                    writer.newLine();
+                    insideNewsList = true;
+                } else if (line.contains("</ul>") && insideNewsList) {
+                    insideNewsList = false;
+                    writer.write(line);
+                    writer.newLine();
+                } else if (!insideNewsList) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ public class ProjectApplication implements CommandLineRunner {
         // 2. 일정 크롤러 실행
         schedule.executeCrawling();
 
-        // 3. SkySportsEplCrawlerWithMore 실행 (별도로 처리 필요 시 추가 작업)
-        skySportsEplCrawlerWithMore.getNews();
+        // 3. 뉴스 크롤러 실행
+        skySportsEplCrawlerWithMore.executeCrawling();
     }
 }
