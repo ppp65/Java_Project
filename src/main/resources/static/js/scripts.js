@@ -297,3 +297,73 @@ document.getElementById("change-color-btn").addEventListener("click", function()
         document.getElementById("shop-message").style.color = "red";
     }
 });
+
+async function submitPost(event) {
+    event.preventDefault();
+
+    const title = document.getElementById('post-title').value;
+    const content = document.getElementById('post-content').value;
+
+    // sessionStorage에서 userId를 가져옴
+    const userId = sessionStorage.getItem("userId"); // userId를 올바르게 가져옵니다.
+    console.log("User ID: " + userId);  // 유저 ID 확인
+
+    const post = {
+        title: title,
+        content: content,
+        userId: userId // 수정된 부분
+    };
+
+    try {
+        const response = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post),
+        });
+
+        if (response.ok) {
+            alert("게시글이 성공적으로 저장되었습니다.");
+            document.getElementById('post-form').reset();
+            loadPosts(); // 게시글 목록을 새로 불러옵니다.
+        } else {
+            alert("게시글 저장에 실패했습니다.");
+        }
+    } catch (error) {
+        console.error("Error saving post:", error);
+        alert("서버와의 통신 중 문제가 발생했습니다.");
+    }
+}
+
+// 게시글 목록을 불러와 HTML에 표시
+async function loadPosts() {
+    try {
+        const response = await fetch('/api/posts', {
+            method: 'GET'
+        });
+
+        const posts = await response.json();
+
+        if (Array.isArray(posts)) {
+            const postList = document.getElementById('post-titles');
+            postList.innerHTML = '';  // 기존 내용을 지우고 새로 추가
+
+            posts.forEach(post => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = post.title;
+                listItem.onclick = () => {
+                    window.location.href = `/post_page.html?id=${post.id}`;
+                };
+                postList.appendChild(listItem);
+            });
+        } else {
+            console.log('응답 데이터가 배열이 아닙니다:', posts);
+        }
+    } catch (error) {
+        console.error('API 요청 오류:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadPosts);
