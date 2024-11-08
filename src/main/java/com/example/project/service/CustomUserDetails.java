@@ -11,15 +11,22 @@ public class CustomUserDetails implements UserDetails {
     private final String password;
     private final int points;
     private final String nicknameColor;
+    private final String teamLogo;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String userId, String username, String password, int points, String nicknameColor, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String userId, String username, String password, int points, String nicknameColor, String teamLogo, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.points = points;
         this.nicknameColor = nicknameColor;
+        this.teamLogo = teamLogo;
         this.authorities = authorities;
+    }
+
+
+    public String getTeamLogo() {
+        return teamLogo;
     }
 
     public String getUserId() {

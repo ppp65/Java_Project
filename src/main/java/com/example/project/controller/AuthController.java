@@ -25,6 +25,7 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+
     @GetMapping("/check-auth")
     public Map<String, Object> checkAuth(HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,6 +38,7 @@ public class AuthController {
             response.put("userId", userDetails.getUserId());
             response.put("points", userDetails.getPoints());
             response.put("nicknameColor", userDetails.getNicknameColor());
+            response.put("teamLogo", userDetails.getTeamLogo());
             return response;
         } else {
             session.invalidate();
@@ -44,7 +46,6 @@ public class AuthController {
             return response;
         }
     }
-
 
     @PostMapping("/update-nickname-color-and-points")
     public ResponseEntity<Map<String, String>> updateNicknameColorAndPoints(@RequestBody Map<String, Object> payload) {
@@ -59,6 +60,10 @@ public class AuthController {
             user.setNicknameColor(color);
             user.setPoints(points);
             userRepository.save(user);
+
+
+            userDetailsService.refreshSession(user);
+
             response.put("message", "닉네임 색상이 업데이트되었습니다.");
             response.put("color", color);
             return ResponseEntity.ok(response);
@@ -67,7 +72,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
-
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@RequestBody User user) {
@@ -85,4 +89,28 @@ public class AuthController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
+    @PostMapping("/update-team-logo")
+    public ResponseEntity<Map<String, String>> updateTeamLogo(@RequestBody Map<String, Object> payload) {
+        Map<String, String> response = new HashMap<>();
+        String userId = (String) payload.get("userId");
+        String logoFileName = (String) payload.get("logo");
+        int points = (int) payload.get("points");
+
+        User user = userRepository.findByUserId(userId).orElse(null);
+
+        if (user != null && user.getPoints() >= 300) {
+            user.setTeamLogo(logoFileName);
+            user.setPoints(points);
+            userRepository.save(user);
+            userDetailsService.refreshSession(user);
+
+            response.put("message", "로고가 업데이트되었습니다.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "사용자를 찾을 수 없거나 포인트가 부족합니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
 }

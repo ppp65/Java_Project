@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        .team-logo.selected {
+            border: 3px solid #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
@@ -35,15 +41,89 @@
     <div class="row">
         <div class="col-lg-8">
 
-            <article>
-                <header class="mb-4">
-                    <h1 class="fw-bolder mb-1">포인트 상점</h1>
-                </header>
-                <p>보유한 포인트로 닉네임 색상을 변경할 수 있습니다! 색상을 변경하려면 아래 버튼을 클릭하세요.</p>
-                <p>필요 포인트: 50</p>
-                <button class="btn btn-primary" id="change-color-btn">닉네임 색상 변경</button>
-                <p id="shop-message" class="mt-3"></p>
-            </article>
+            <h1 class="fw-bolder mb-4">포인트 상점</h1>
+
+            <ul class="nav nav-tabs" id="pointShopTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="nickname-tab" data-bs-toggle="tab" data-bs-target="#nickname" type="button" role="tab" aria-controls="nickname" aria-selected="true">닉네임 색상 변경</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab" aria-controls="main" aria-selected="false">메인 페이지</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="team-logo-tab" data-bs-toggle="tab" data-bs-target="#team-logo" type="button" role="tab" aria-controls="team-logo" aria-selected="false">팀 로고 선택</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pointShopTabsContent">
+                <div class="tab-pane fade show active" id="nickname" role="tabpanel" aria-labelledby="nickname-tab">
+                    <p class="mt-4">보유한 포인트로 닉네임 색상을 변경할 수 있습니다! 색상을 변경하려면 아래 버튼을 클릭하세요.</p>
+                    <p>필요 포인트: 50</p>
+                    <button class="btn btn-primary" id="change-color-btn">닉네임 색상 변경</button>
+                    <p id="shop-message" class="mt-3"></p>
+                </div>
+
+                <div class="tab-pane fade" id="main" role="tabpanel" aria-labelledby="main-tab">
+                    <p class="mt-4">메인 페이지</p>
+                </div>
+
+
+                <div class="tab-pane fade" id="team-logo" role="tabpanel" aria-labelledby="team-logo-tab">
+                    <p class="mt-4">보유한 포인트로 팀 로고를 변경할 수 있습니다. 원하는 팀 로고를 클릭하세요. (300 포인트 필요)</p>
+
+                    <div class="row">
+                        <div class="col-3 mb-3">
+                            <img src="images/arsenal.png" alt="Arsenal" class="img-thumbnail team-logo" data-logo="arsenal.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/aston_villa.png" alt="Aston Villa" class="img-thumbnail team-logo" data-logo="aston_villa.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/brentford.png" alt="Brentford" class="img-thumbnail team-logo" data-logo="brentford.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/brighton.png" alt="Brighton" class="img-thumbnail team-logo" data-logo="brighton.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/burnley.png" alt="Burnley" class="img-thumbnail team-logo" data-logo="burnley.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/chelsea.png" alt="Chelsea" class="img-thumbnail team-logo" data-logo="chelsea.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/crystal_palace.png" alt="Crystal Palace" class="img-thumbnail team-logo" data-logo="crystal_palace.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/everton.png" alt="Everton" class="img-thumbnail team-logo" data-logo="everton.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/liverpool.png" alt="Liverpool" class="img-thumbnail team-logo" data-logo="liverpool.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/manchester_city.png" alt="Manchester City" class="img-thumbnail team-logo" data-logo="manchester_city.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/manchester_united.png" alt="Manchester United" class="img-thumbnail team-logo" data-logo="manchester_united.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/newcastle.png" alt="Newcastle" class="img-thumbnail team-logo" data-logo="newcastle.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/tottenham.png" alt="Tottenham" class="img-thumbnail team-logo" data-logo="tottenham.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/west_ham.png" alt="West Ham" class="img-thumbnail team-logo" data-logo="west_ham.png" />
+                        </div>
+                        <div class="col-3 mb-3">
+                            <img src="images/wolves.png" alt="Wolves" class="img-thumbnail team-logo" data-logo="wolves.png" />
+                        </div>
+                    </div>
+
+                    <p id="logo-message" class="mt-3"></p>
+                </div>
+
+
+            </div>
         </div>
 
         <!-- Side widgets-->
@@ -73,10 +153,11 @@
 
                     <!-- 로그인 후 닉네임을 표시할 영역 -->
                     <div id="welcome-message" style="display: none;">
-                        <p>환영합니다, <span id="username"></span> 님!</p>
-                        <p>포인트 :  <span id="point"></span></p>
+                        <p>환영합니다, <span id="user-logo" style="display:inline;"></span><span id="username"></span> 님!</p>
+                        <p>포인트 : <span id="point"></span></p>
                         <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
                     </div>
+
                 </div>
             </div>
             <!-- Search widget-->

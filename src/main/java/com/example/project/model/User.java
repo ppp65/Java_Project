@@ -34,6 +34,9 @@ public class User {
     @Column(name = "NICKNAME_COLOR")
     private String nicknameColor;
 
+    @Column(name = "teamLogo")
+    private String teamLogo;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -76,6 +79,7 @@ public class User {
         return createdAt;
     }
 
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -102,5 +106,13 @@ public class User {
 
     public void setNicknameColor(String nicknameColor) {
         this.nicknameColor = nicknameColor;
+    }
+
+    public String getTeamLogo() {
+        return teamLogo;
+    }
+
+    public void setTeamLogo(String teamLogo) {
+        this.teamLogo = teamLogo;
     }
 }
