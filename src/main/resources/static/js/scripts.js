@@ -122,7 +122,7 @@ document.querySelectorAll(".team-logo").forEach(logo => {
             return;
         }
 
-                if (currentPoints >= 300) {
+        if (currentPoints >= 300) {
             fetch("/api/update-team-logo", {
                 method: "POST",
                 headers: {

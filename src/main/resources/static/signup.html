@@ -67,59 +67,59 @@
                         <button class="btn btn-primary" id="button-signup" type="button">회원가입</button>
                     </div>
                 </div>
+            </article>
         </div>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <!-- Footer-->
-    <footer class="py-5 bg-dark">
-        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-    </footer>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="js/scripts.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("button-signup").addEventListener("click", function() {
-                var nickname = document.getElementById("nickname").value;
-                var username = document.getElementById("username").value;
-                var password = document.getElementById("password").value;
-                var confirmPassword = document.getElementById("confirmPassword").value;
+</div>
 
-                // 비밀번호 확인
-                if (password !== confirmPassword) {
-                    alert("비밀번호가 일치하지 않습니다.");
-                    return;
-                }
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("button-signup").addEventListener("click", function() {
+            let nickname = document.getElementById("nickname").value;
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirmPassword").value;
 
-                // AJAX 요청을 서버로 전송
-                fetch("/auth/signup", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userId: username,
-                        username: nickname,
-                        password: password,
-                        email: "",  // 이메일 입력을 추가하려면 여기에도 추가하세요.
-                        role: "USER"
-                    }),
+            if (password !== confirmPassword) {
+                alert("비밀번호가 일치하지 않습니다.");
+                return;
+            }
+
+            fetch("/api/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId: username,
+                    username: nickname,
+                    password: password
+                }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("회원가입이 성공적으로 완료되었습니다.");
+                        window.location.href = "/login";
+                    } else {
+                        response.json().then(data => {
+                            alert(data.message || "회원가입에 실패했습니다.");
+                        });
+                    }
                 })
-                    .then(response => {
-                        if (response.ok) {
-                            alert("회원가입이 성공적으로 완료되었습니다.");
-                            window.location.href = "/login";
-                        } else {
-                            alert("회원가입에 실패했습니다.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("서버와의 통신 중 오류가 발생했습니다.");
-                    });
-            });
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("서버와의 통신 중 오류가 발생했습니다.");
+                });
         });
-    </script>
+    });
+</script>
 </body>
 </html>
