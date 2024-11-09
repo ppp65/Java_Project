@@ -103,14 +103,26 @@ public class Schedule {
     private static void updateHtmlFile(String filePath, String tableContent) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(filePath));
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            boolean insideScheduleTable = false;
+
             for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
+                // `<tbody id="schedule-table">` 부분을 찾으면 기존 데이터를 덮어쓸 준비를 함
                 if (line.contains("<tbody id=\"schedule-table\">")) {
-                    writer.write(tableContent);
+                    writer.write(line);
+                    writer.newLine();
+                    writer.write(tableContent); // 새롭게 크롤링한 데이터를 추가
+                    writer.newLine();
+                    insideScheduleTable = true;
+                } else if (line.contains("</tbody>") && insideScheduleTable) {
+                    insideScheduleTable = false; // `</tbody>` 태그까지 추가
+                    writer.write(line);
+                    writer.newLine();
+                } else if (!insideScheduleTable) {
+                    writer.write(line); // `<tbody>` 외부의 다른 HTML 내용은 그대로 유지
                     writer.newLine();
                 }
             }
         }
     }
+
 }
