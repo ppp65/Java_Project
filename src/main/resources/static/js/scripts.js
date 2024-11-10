@@ -13,7 +13,6 @@ document.getElementById("button-login").addEventListener("click", function() {
     })
         .then(response => {
             if (response.ok) {
-
                 fetch("/api/check-auth", {
                     method: "GET",
                     credentials: "include"
@@ -110,89 +109,6 @@ function fetchAndUpdateUserData() {
     });
 }
 
-
-document.querySelectorAll(".team-logo").forEach(logo => {
-    logo.addEventListener("click", function() {
-        const logoFileName = this.getAttribute("data-logo");
-        const currentPoints = parseInt(sessionStorage.getItem("points") || "0", 10);
-        const userId = sessionStorage.getItem("userId");
-
-        const confirmChange = confirm("로고를 변경하시겠습니까?");
-        if (!confirmChange) {
-            return;
-        }
-
-        if (currentPoints >= 300) {
-            fetch("/api/update-team-logo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ userId: userId, logo: logoFileName, points: currentPoints - 300 }),
-                credentials: "include"
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message === "로고가 업데이트되었습니다.") {
-                        sessionStorage.setItem("points", currentPoints - 300);
-                        sessionStorage.setItem("teamLogo", logoFileName);
-                        document.getElementById("point").innerText = currentPoints - 300;
-
-                        updateLoginLogo(logoFileName);
-
-                        alert("로고가 성공적으로 변경되었습니다!");
-                    } else {
-                        alert("업데이트 실패: " + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error("로고 업데이트 중 오류 발생:", error);
-                    alert("서버와의 통신에 문제가 발생했습니다.");
-                });
-        } else {
-            alert("포인트가 부족합니다. 300포인트 이상 필요합니다.");
-        }
-    });
-});
-
-
-// 닉네임 앞에 로고를 추가하거나 숨기는 함수
-function updateLoginLogo(logoFileName) {
-    const logoElement = document.getElementById("user-logo");
-
-    if (logoFileName) {
-        logoElement.innerHTML = `<img src="images/${logoFileName}" alt="Team Logo" style="width: 20px; height: 20px; margin-right: 5px;" />`;
-        logoElement.style.display = "inline";
-    } else {
-        logoElement.style.display = "none";
-    }
-}
-
-window.onload = function() {
-    if (sessionStorage.getItem("isAuthenticated") === "true") {
-        fetch("/api/check-auth", {
-            method: "GET",
-            credentials: "include"
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.teamLogo) {
-                    sessionStorage.setItem("teamLogo", data.teamLogo);
-                    updateLoginLogo(data.teamLogo);
-                }
-                document.getElementById("login-form").style.display = "none";
-                document.getElementById("welcome-message").style.display = "block";
-                document.getElementById("username").innerText = data.username;
-                document.getElementById("point").innerText = data.points;
-            })
-            .catch(error => console.error("인증 상태 확인 중 오류 발생:", error));
-    } else {
-        document.getElementById("login-form").style.display = "block";
-        document.getElementById("welcome-message").style.display = "none";
-    }
-};
-
-
 // 페이지 로드 시 항상 최신 정보 가져오기
 window.onload = function() {
     if (sessionStorage.getItem("isAuthenticated") === "true") {
@@ -239,65 +155,7 @@ document.getElementById("change-color-btn").addEventListener("click", function()
     }
 });
 
-
-
-
-function sendToSoccerAI() {
-    var input = document.getElementById("searchInput").value;
-    localStorage.setItem("soccerAIQuestion", input);
-    window.location.href = "soccer%20ai.html";
-}
-
-
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
-document.getElementById("change-color-btn").addEventListener("click", function() {
-    let currentPoints = parseInt(sessionStorage.getItem("points") || "0", 10);
-    const userId = sessionStorage.getItem("userId");
-    const randomColor = getRandomColor();
-
-    if (currentPoints >= 50) {
-        fetch(`/api/update-nickname-color-and-points`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId: userId, color: randomColor, points: currentPoints - 50 })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === "닉네임 색상이 업데이트되었습니다.") {
-                    // 업데이트 성공 후 최신 정보로 UI 갱신
-                    document.getElementById("shop-message").innerText = `닉네임 색상이 변경되었습니다! 새로운 색상: ${randomColor}`;
-                    document.getElementById("shop-message").style.color = randomColor;
-
-                    // 최신 포인트를 반영
-                    sessionStorage.setItem("points", currentPoints - 50);
-                    document.getElementById("point").innerText = currentPoints - 50;
-                    document.getElementById("username").style.color = randomColor;
-                } else {
-                    document.getElementById("shop-message").innerText = "업데이트 실패: " + data.message;
-                    document.getElementById("shop-message").style.color = "red";
-                }
-            })
-            .catch(error => {
-                console.error("Error updating nickname color:", error);
-                document.getElementById("shop-message").innerText = "서버와의 통신에 문제가 발생했습니다.";
-                document.getElementById("shop-message").style.color = "red";
-            });
-    } else {
-        document.getElementById("shop-message").innerText = "포인트가 부족합니다. 50포인트 이상 필요합니다.";
-        document.getElementById("shop-message").style.color = "red";
-    }
-});
-
+// 게시글 제출 함수
 async function submitPost(event) {
     event.preventDefault();
 
@@ -351,19 +209,25 @@ async function loadPosts() {
 
             posts.forEach(post => {
                 const listItem = document.createElement('li');
-                listItem.className = 'list-group-item';
-                listItem.textContent = post.title;
-                listItem.onclick = () => {
-                    window.location.href = `/post_page.html?id=${post.id}`;
-                };
+                listItem.className = 'post-item';
+                listItem.innerHTML = `
+                    <h3><a href="post_page.html?id=${post.id}">${post.title}</a></h3>
+                    <p>${post.content}</p>
+                `;
                 postList.appendChild(listItem);
             });
-        } else {
-            console.log('응답 데이터가 배열이 아닙니다:', posts);
         }
     } catch (error) {
-        console.error('API 요청 오류:', error);
+        console.error("Error loading posts:", error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadPosts);
+// 랜덤 색상 생성 함수
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}

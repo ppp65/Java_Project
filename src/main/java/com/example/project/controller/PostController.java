@@ -73,6 +73,16 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    // 게시글 상세보기 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+        Post post = postRepository.findById(id).orElse(null);
+        if (post != null) {
+            return ResponseEntity.ok(post);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 게시글이 없으면 404 반환
+        }
+    }
 
     // 게시글 수정
     @PostMapping("/update/{id}")
@@ -134,4 +144,5 @@ public class PostController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
 }

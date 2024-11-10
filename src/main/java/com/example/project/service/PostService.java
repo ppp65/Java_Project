@@ -21,12 +21,17 @@ public class PostService {
     // 게시글 저장
     @Transactional
     public Post savePost(Post post) {
-        System.out.println("Saving post: " + post.getTitle());  // 로그 추가하여 확인
-        return postRepository.save(post);  // 데이터베이스에 저장
+        System.out.println("Saving post: " + post.getTitle());
+        return postRepository.save(post);
     }
 
     // 모든 게시글 조회
     public List<Post> getAllPosts() {
-        return postRepository.findAll();  // 모든 게시글 반환
+        return postRepository.findAll();
+    }
+
+    // 특정 ID로 게시글 조회 (PostController에서 사용)
+    public Post getPostById(Long id) {
+        return postRepository.findById(id).orElse(null);  // ID로 게시글 조회
     }
 }

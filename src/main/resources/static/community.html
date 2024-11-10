@@ -118,7 +118,7 @@
             posts.forEach(post => {
                 const postItem = document.createElement('li');
                 postItem.classList.add('list-group-item', 'text-center');
-                postItem.innerHTML = `<a href="postpage.html?id=${post.id}" class="text-decoration-none">${post.title}</a>`;
+                postItem.innerHTML = `<a href="post_page.html?postId=${post.id}" class="text-decoration-none">${post.title}</a>`;
                 postList.appendChild(postItem);
             });
         } catch (error) {

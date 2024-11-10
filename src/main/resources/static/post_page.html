@@ -1,10 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>EPL Insight 커뮤니티</title>
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">EPL Insight</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="rank.html">순위</a></li>
+                <li class="nav-item"><a class="nav-link" href="schedule.html">일정</a></li>
+                <li class="nav-item"><a class="nav-link" href="news.html">뉴스</a></li>
+                <li class="nav-item"><a class="nav-link" href="highlights.html">하이라이트</a></li>
+                <li class="nav-item"><a class="nav-link" href="match%20prediction.html">승부 예측</a></li>
+                <li class="nav-item"><a class="nav-link" href="community.html">커뮤니티</a></li>
+                <li class="nav-item"><a class="nav-link" href="soccer%20ai.html">축구 AI</a></li>
+                <li class="nav-item"><a class="nav-link" href="point.html">포인트 상점</a></li>
+                <li class="nav-item"><a class="nav-link" href="information.html">내정보</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
+<div class="container mt-5">
+    <div class="row">
+        <!-- 게시글 내용 섹션 -->
+        <div class="col-lg-8">
+            <h1 id="post-title" class="fw-bolder mb-4"></h1>
+            <p id="post-content" class="mb-3"></p>
+            <p>Posted by: <span id="post-author"></span></p>
+            <p>Created at: <span id="post-created-at"></span></p>
+        </div>
+
+        <!-- 오른쪽 사이드바: 로그인 및 검색 위젯 -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">Login</div>
+                <div class="card-body">
+                    <div id="login-form">
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="text" id="user_id" placeholder="Enter username..." />
+                        </div>
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="password" id="password" placeholder="Enter password..." />
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" id="button-login" type="button">Login</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="signup.html" class="text-decoration-none">회원가입</a>
+                        </div>
+                    </div>
+                    <div id="welcome-message" style="display: none;">
+                        <p>환영합니다, <span id="user-logo" style="display:inline;"></span><span id="username"></span> 님!</p>
+                        <p>포인트 : <span id="point"></span></p>
+                        <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+            <!-- 검색 위젯 -->
+            <div class="card mb-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Enter search term..." />
+                        <button class="btn btn-primary" id="button-search" type="button" onclick="sendToSoccerAI()">Go!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+</footer>
+
+<!-- JS 스크립트 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/scripts.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // URL에서 게시글 ID 가져오기
+        const postId = new URLSearchParams(window.location.search).get('postId');
+        if (postId) {
+            // 서버에서 해당 ID의 게시글을 가져오기
+            fetch(`/api/posts/${postId}`)
+                .then(response => response.json())
+                .then(post => {
+                    // 게시글 데이터가 있으면 화면에 표시
+                    if (post) {
+                        document.getElementById("post-title").innerText = post.title;
+                        document.getElementById("post-content").innerText = post.content;
+                        document.getElementById("post-author").innerText = post.username;
+                        document.getElementById("post-created-at").innerText = new Date(post.createdAt).toLocaleString();
+                    } else {
+                        alert("게시글을 찾을 수 없습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching post:", error);
+                    alert("게시글을 불러오는 데 오류가 발생했습니다.");
+                });
+        } else {
+            alert("잘못된 게시글 ID입니다.");
+        }
+    });
+</script>
 </body>
 </html>
