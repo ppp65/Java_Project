@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -70,7 +71,7 @@ public class PostController {
     // 게시글 조회 (상세보기)
     @GetMapping
     public List<Post> getPosts() {
-        return postService.getAllPosts();
+        return (List<Post>) postService.getAllPosts();
     }
 
     // 게시글 상세보기 조회
@@ -82,6 +83,12 @@ public class PostController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 게시글이 없으면 404 반환
         }
+    }
+
+    @GetMapping("/{postId}/adjacent")
+    public ResponseEntity<Map<String, Post>> getAdjacentPosts(@PathVariable Long postId) {
+        Map<String, Post> adjacentPosts = postService.getAdjacentPosts(postId);
+        return ResponseEntity.ok(adjacentPosts);
     }
 
     // 게시글 수정
@@ -145,4 +152,25 @@ public class PostController {
         }
     }
 
+    // 이전 게시글 조회
+    @GetMapping("/{postId}/previous")
+    public ResponseEntity<Post> getPreviousPost(@PathVariable Long postId) {
+        Post previousPost = postService.getAdjacentPosts(postId).get("previous");
+        if (previousPost != null) {
+            return ResponseEntity.ok(previousPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // 다음 게시글 조회
+    @GetMapping("/{postId}/next")
+    public ResponseEntity<Post> getNextPost(@PathVariable Long postId) {
+        Post nextPost = postService.getAdjacentPosts(postId).get("next");
+        if (nextPost != null) {
+            return ResponseEntity.ok(nextPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

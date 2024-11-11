@@ -36,6 +36,11 @@
             <p id="post-content" class="mb-3"></p>
             <p>Posted by: <span id="post-author"></span></p>
             <p>Created at: <span id="post-created-at"></span></p>
+            <button id="delete-button" class="btn btn-danger mb-3" style="display: none;" onclick="deletePost()">삭제</button>
+            <div>
+                <a id="previous-post" class="btn btn-secondary" href="#" style="display: none;">이전 글</a>
+                <a id="next-post" class="btn btn-secondary" href="#" style="display: none;">다음 글</a>
+            </div>
         </div>
 
         <!-- 오른쪽 사이드바: 로그인 및 검색 위젯 -->
@@ -88,19 +93,58 @@
 <script src="js/scripts.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // URL에서 게시글 ID 가져오기
         const postId = new URLSearchParams(window.location.search).get('postId');
+        const currentUserId = sessionStorage.getItem("userId");  // 로그인한 사용자 ID
+
+        // 로그인 상태 확인
+        const isAuthenticated = sessionStorage.getItem("isAuthenticated");
+        if (isAuthenticated === "true") {
+            const username = sessionStorage.getItem("userId");
+            const points = sessionStorage.getItem("points");
+            const nicknameColor = sessionStorage.getItem("nicknameColor");
+            const teamLogo = sessionStorage.getItem("teamLogo");
+
+            document.getElementById("welcome-message").style.display = "block";
+            document.getElementById("username").innerText = username;
+            document.getElementById("point").innerText = points;
+            if (nicknameColor) {
+                document.getElementById("username").style.color = nicknameColor;
+            }
+            if (teamLogo) {
+                updateLoginLogo(teamLogo);
+            }
+
+            // 로그아웃 버튼 클릭 이벤트
+            document.getElementById("logout").addEventListener("click", function() {
+                sessionStorage.clear();
+                alert("로그아웃되었습니다.");
+                location.reload();
+            });
+
+        } else {
+            document.getElementById("login-form").style.display = "block";
+            document.getElementById("welcome-message").style.display = "none";
+        }
+
         if (postId) {
-            // 서버에서 해당 ID의 게시글을 가져오기
             fetch(`/api/posts/${postId}`)
                 .then(response => response.json())
                 .then(post => {
-                    // 게시글 데이터가 있으면 화면에 표시
+                    console.log(post);  // post 데이터 확인
+
                     if (post) {
                         document.getElementById("post-title").innerText = post.title;
                         document.getElementById("post-content").innerText = post.content;
                         document.getElementById("post-author").innerText = post.username;
                         document.getElementById("post-created-at").innerText = new Date(post.createdAt).toLocaleString();
+
+                        // 작성자와 현재 사용자가 동일하면 삭제 버튼 표시
+                        if (post.userId === currentUserId) {
+                            document.getElementById("delete-button").style.display = 'block';
+                        }
+
+                        // 이전 글과 다음 글 불러오기
+                        loadAdjacentPosts(postId);
                     } else {
                         alert("게시글을 찾을 수 없습니다.");
                     }
@@ -113,6 +157,55 @@
             alert("잘못된 게시글 ID입니다.");
         }
     });
+
+    // 게시글 삭제 기능
+    function deletePost() {
+        const postId = new URLSearchParams(window.location.search).get('postId');
+        if (postId) {
+            fetch(`/api/posts/delete/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}` // 추가: JWT 토큰 또는 세션 ID 필요할 경우
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("게시글이 삭제되었습니다.");
+                        window.location.href = 'community.html';
+                    } else {
+                        alert("게시글 삭제에 실패했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error deleting post:", error);
+                    alert("게시글 삭제에 오류가 발생했습니다.");
+                });
+        }
+    }
+
+    // 이전 글 및 다음 글 불러오기
+    function loadAdjacentPosts(postId) {
+        fetch(`/api/posts/${postId}/previous`)
+            .then(response => response.json())
+            .then(post => {
+                if (post) {
+                    document.getElementById("previous-post").style.display = 'inline-block';
+                    document.getElementById("previous-post").href = `post_page.html?postId=${post.id}`;
+                }
+            })
+            .catch(error => console.error("Error loading previous post:", error));
+
+        fetch(`/api/posts/${postId}/next`)
+            .then(response => response.json())
+            .then(post => {
+                if (post) {
+                    document.getElementById("next-post").style.display = 'inline-block';
+                    document.getElementById("next-post").href = `post_page.html?postId=${post.id}`;
+                }
+            })
+            .catch(error => console.error("Error loading next post:", error));
+    }
 </script>
 </body>
 </html>
