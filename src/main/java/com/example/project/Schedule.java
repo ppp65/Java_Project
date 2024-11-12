@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -16,6 +17,8 @@ public class Schedule {
     public void executeCrawling() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
+
+        List<MatchDto> matchList = new ArrayList<>();
 
         String filePath = Paths.get("src/main/resources/static/schedule.html").toAbsolutePath().toString();
         String[] months = {"202408", "202409", "202410", "202411", "202412", "202501", "202502", "202503", "202504", "202505"};
@@ -82,6 +85,12 @@ public class Schedule {
                         String awayScore = match.findElement(By.cssSelector("div.team_away em.num_score")).getText();
                         score = homeScore + " : " + awayScore;
                     }
+
+                    String homeTeam = homeTeamElement.getText();
+                    String awayTeam = awayTeamElement.getText();
+
+                    MatchDto match_data = new MatchDto(currentDate, time, stadium, homeTeamName, homeTeam, score, awayTeamName, awayTeam);
+                    matchList.add(match_data);
 
                     if (!match.findElements(By.cssSelector("td.td_date")).isEmpty()) {
                         tableContent.append("<tr><td rowspan=\"" + rowspan + "\">" + currentDate + "</td><td>" + time + "</td><td>" + stadium + "</td><td>" + homeTeamName + "</td><td>" + score + "</td><td>" + awayTeamName + "</td></tr>");
