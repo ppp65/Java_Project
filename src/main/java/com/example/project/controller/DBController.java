@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.MatchDto;
 import com.example.project.NewsDto;
+import com.example.project.Schedule;
 import com.example.project.SkySportsEplCrawlerWithMore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,9 @@ public class DBController {
 
     @PostMapping("/uploadMatch")
     public String uploadMatchData(@RequestBody List<MatchDto> matchData) {
-        DBService.uploadMatchDataToOracle(matchData);
+        Schedule schedule = new Schedule();
+        List<MatchDto> crawledMatchData = schedule.executeCrawling();
+        DBService.uploadMatchDataToOracle(crawledMatchData);
         return "경기 일정 업로딩";
     }
 }
