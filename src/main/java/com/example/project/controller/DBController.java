@@ -27,7 +27,7 @@ public class DBController {
     }
 
     @PostMapping("/uploadMatch")
-    public String uploadMatchData(@RequestBody List<MatchDto> matchData) {
+    public String uploadMatchData() {
         Schedule schedule = new Schedule();
         List<MatchDto> crawledMatchData = schedule.executeCrawling();
         DBService.uploadMatchDataToOracle(crawledMatchData);
