@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>test</title>
+    <!-- Favicon-->
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body>
+
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+
+        </div>
+        <!-- Side widgets-->
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">Login</div>
+                <div class="card-body">
+                    <!-- 로그인 전 입력 폼 -->
+                    <div id="login-form">
+                        <div class="input-group mb-3">
+                            <!-- 아이디 입력 -->
+                            <input class="form-control" type="text" id="username" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
+                        </div>
+                        <div class="input-group mb-3">
+                            <!-- 비밀번호 입력 -->
+                            <input class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
+                        </div>
+                        <!-- 로그인 버튼 -->
+                        <div class="d-grid">
+                            <button class="btn btn-primary" id="button-login" type="button">Login</button>
+                        </div>
+                        <!-- 회원가입 링크 추가 -->
+                        <div class="text-center mt-3">
+                            <a href="signup.html" class="text-decoration-none">회원가입</a>
+                        </div>
+                    </div>
+
+                    <!-- 로그인 후 닉네임을 표시할 영역 -->
+                    <div id="welcome-message" style="display: none;">
+                        <p>환영합니다, <span id="nickname"></span> 님!</p>
+                        <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                        <button class="btn btn-primary" id="button-search" type="button" onclick="sendToSoccerAI()">Go!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<
+</body>
+</html>
