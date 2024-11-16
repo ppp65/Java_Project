@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class SkySportsEplCrawlerWithMore {
 
-    public List<NewsDto> executeCrawling() {
+    public void executeCrawling() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
@@ -59,6 +59,8 @@ public class SkySportsEplCrawlerWithMore {
                 newsContent.append("<p>" + snippet + "</p></div></div></li>");
             }
 
+            OracleDBUploader.News_uploadDataToOracleDB(newsList);
+
             updateHtmlFile(filePath, newsContent.toString());
             System.out.println("크롤링 완료! news.html 파일이 성공적으로 업데이트되었습니다.");
 
@@ -67,7 +69,6 @@ public class SkySportsEplCrawlerWithMore {
         } finally {
             driver.quit();
         }
-        return newsList;
     }
 
     private static String formatDate(String dateStr) {

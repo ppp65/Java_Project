@@ -99,6 +99,9 @@ public class Schedule {
                     }
                 }
             }
+
+            OracleDBUploader.Match_uploadDataToOracleDB(matchList);
+
             updateHtmlFile(filePath, tableContent.toString());
             System.out.println("EPL 전체 시즌 일정 크롤링 완료: " + filePath);
 

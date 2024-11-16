@@ -14,7 +14,7 @@ public class OracleDBUploader {
     //DB 정보
     private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:XE";  // DB URL
     private static final String DB_USER = "system";  // DB Username
-    private static final String DB_PASSWORD = "123123";  // DB Password
+    private static final String DB_PASSWORD = "20030917s!";  // DB Password
 
     public static void News_uploadDataToOracleDB(List<NewsDto> crawledData) {
             // 테이블과 데이터
