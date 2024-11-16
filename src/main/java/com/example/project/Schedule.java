@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class Schedule {
 
-    public List<MatchDto> executeCrawling() {
+    public void executeCrawling() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
@@ -110,7 +110,6 @@ public class Schedule {
         } finally {
             driver.quit();
         }
-        return matchList;
     }
 
     private static void updateHtmlFile(String filePath, String tableContent) throws IOException {

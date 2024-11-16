@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class OracleDBUploader {
 
     //DB 정보
     private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:XE";  // DB URL
-    private static final String DB_USER = "system";  // DB Username
-    private static final String DB_PASSWORD = "20030917s!";  // DB Password
+    private static final String DB_USER = "SYSTEM";  // DB Username
+    private static final String DB_PASSWORD = "123123";  // DB Password
 
     public static void News_uploadDataToOracleDB(List<NewsDto> crawledData) {
             // 테이블과 데이터
@@ -56,10 +55,8 @@ public class OracleDBUploader {
                 preparedStatement.setDate(2, java.sql.Date.valueOf(match.getTime()));  // Match Time
                 preparedStatement.setString(3, match.getStadium());  // Stadium
                 preparedStatement.setString(4, match.getHomeTeam());  // Home Team
-                preparedStatement.setString(5, match.getHomeTeamIcon());  // Home Team Icon
-                preparedStatement.setString(6, match.getScore());  // Score
-                preparedStatement.setString(7, match.getAwayTeam());  // Away Team
-                preparedStatement.setString(8, match.getAwayTeamIcon());  // Away Team Icon
+                preparedStatement.setString(5, match.getScore());  // Score
+                preparedStatement.setString(6, match.getAwayTeam());  // Away Team
 
                 // 데이터 삽입
                 preparedStatement.executeUpdate();
