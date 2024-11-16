@@ -111,49 +111,6 @@ function fetchAndUpdateUserData() {
 }
 
 
-document.querySelectorAll(".team-logo").forEach(logo => {
-    logo.addEventListener("click", function() {
-        const logoFileName = this.getAttribute("data-logo");
-        const currentPoints = parseInt(sessionStorage.getItem("points") || "0", 10);
-        const userId = sessionStorage.getItem("userId");
-
-        const confirmChange = confirm("로고를 변경하시겠습니까?");
-        if (!confirmChange) {
-            return;
-        }
-
-        if (currentPoints >= 300) {
-            fetch("/api/update-team-logo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ userId: userId, logo: logoFileName, points: currentPoints - 300 }),
-                credentials: "include"
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message === "로고가 업데이트되었습니다.") {
-                        sessionStorage.setItem("points", currentPoints - 300);
-                        sessionStorage.setItem("teamLogo", logoFileName);
-                        document.getElementById("point").innerText = currentPoints - 300;
-
-                        updateLoginLogo(logoFileName);
-
-                        alert("로고가 성공적으로 변경되었습니다!");
-                    } else {
-                        alert("업데이트 실패: " + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error("로고 업데이트 중 오류 발생:", error);
-                    alert("서버와의 통신에 문제가 발생했습니다.");
-                });
-        } else {
-            alert("포인트가 부족합니다. 300포인트 이상 필요합니다.");
-        }
-    });
-});
 
 
 // 닉네임 앞에 로고를 추가하거나 숨기는 함수
@@ -220,7 +177,7 @@ document.getElementById("change-color-btn").addEventListener("click", function()
             .then(response => response.json())
             .then(data => {
                 if (data.message === "닉네임 색상이 업데이트되었습니다.") {
-                    fetchAndUpdateUserData(); // 업데이트 후 최신 정보 다시 불러오기
+                    fetchAndUpdateUserData();
                     document.getElementById("shop-message").innerText = `닉네임 색상이 변경되었습니다! 새로운 색상: ${randomColor}`;
                     document.getElementById("shop-message").style.color = randomColor;
                 } else {
@@ -274,11 +231,9 @@ document.getElementById("change-color-btn").addEventListener("click", function()
             .then(response => response.json())
             .then(data => {
                 if (data.message === "닉네임 색상이 업데이트되었습니다.") {
-                    // 업데이트 성공 후 최신 정보로 UI 갱신
                     document.getElementById("shop-message").innerText = `닉네임 색상이 변경되었습니다! 새로운 색상: ${randomColor}`;
                     document.getElementById("shop-message").style.color = randomColor;
 
-                    // 최신 포인트를 반영
                     sessionStorage.setItem("points", currentPoints - 50);
                     document.getElementById("point").innerText = currentPoints - 50;
                     document.getElementById("username").style.color = randomColor;
@@ -305,14 +260,13 @@ async function submitPost(event) {
     const title = document.getElementById('post-title').value;
     const content = document.getElementById('post-content').value;
 
-    // sessionStorage에서 userId를 가져옴
-    const userId = sessionStorage.getItem("userId"); // userId를 올바르게 가져옵니다.
-    console.log("User ID: " + userId);  // 유저 ID 확인
+    const userId = sessionStorage.getItem("userId");
+    console.log("User ID: " + userId);
 
     const post = {
         title: title,
         content: content,
-        userId: userId // 수정된 부분
+        userId: userId
     };
 
     try {
@@ -327,7 +281,7 @@ async function submitPost(event) {
         if (response.ok) {
             alert("게시글이 성공적으로 저장되었습니다.");
             document.getElementById('post-form').reset();
-            loadPosts(); // 게시글 목록을 새로 불러옵니다.
+            loadPosts();
         } else {
             alert("게시글 저장에 실패했습니다.");
         }
@@ -348,7 +302,7 @@ async function loadPosts() {
 
         if (Array.isArray(posts)) {
             const postList = document.getElementById('post-titles');
-            postList.innerHTML = '';  // 기존 내용을 지우고 새로 추가
+            postList.innerHTML = '';
 
             posts.forEach(post => {
                 const listItem = document.createElement('li');
@@ -363,5 +317,111 @@ async function loadPosts() {
     } catch (error) {
         console.error("Error loading posts:", error);
     }
+}
+
+document.querySelectorAll(".team-logo").forEach(logo => {
+    logo.addEventListener("click", function () {
+        const logoFileName = this.getAttribute("data-logo");
+        const type = this.getAttribute("data-type") || "team";
+        const currentPoints = parseInt(sessionStorage.getItem("points") || "0", 10);
+        const userId = sessionStorage.getItem("userId");
+
+        const confirmMessage = type === "main"
+            ? "메인 로고를 변경하시겠습니까? (500 포인트 필요)"
+            : "팀 로고를 변경하시겠습니까? (300 포인트 필요)";
+
+        const requiredPoints = type === "main" ? 500 : 300;
+        const apiUrl = type === "main" ? "/api/update-main-logo" : "/api/update-team-logo";
+
+        if (!confirm(confirmMessage)) return;
+
+        if (currentPoints >= requiredPoints) {
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    logo: logoFileName,
+                    points: currentPoints - requiredPoints,
+                }),
+                credentials: "include",
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message.includes("성공")) {
+                        sessionStorage.setItem("points", currentPoints - requiredPoints);
+                        document.getElementById("point").innerText = currentPoints - requiredPoints;
+
+                        if (type === "main") {
+                            updateMainLogo(logoFileName);
+                        } else {
+                            updateTeamLogo(logoFileName);
+                        }
+
+                        fetchAndUpdateUserData();
+
+                        alert(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error(`${type === "main" ? "메인" : "팀"} 로고 업데이트 중 오류 발생:`, error);
+                    alert("서버와의 통신에 문제가 발생했습니다.");
+                });
+        } else {
+            alert(`포인트가 부족합니다. ${requiredPoints} 포인트 이상 필요합니다.`);
+        }
+    });
+});
+
+
+// 팀 로고 업데이트
+function updateTeamLogo(logoFileName) {
+    const logoElement = document.getElementById("user-logo");
+    if (logoFileName) {
+        logoElement.innerHTML = `<img src="images/${logoFileName}" alt="team Logo" style="width: 20px; height: 20px; margin-right: 5px;" />`;
+        logoElement.style.display = "inline";
+    } else {
+        logoElement.style.display = "none";
+    }
+}
+
+// 사용자 정보를 새로 가져와 로그인 폼에 실시간 반영
+function fetchAndUpdateUserData() {
+    fetch("/api/check-auth", {
+        method: "GET",
+        credentials: "include"
+    })
+        .then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    sessionStorage.setItem("userId", data.userId);
+                    sessionStorage.setItem("points", data.points);
+                    sessionStorage.setItem("nicknameColor", data.nicknameColor);
+                    sessionStorage.setItem("teamLogo", data.teamLogo);
+                    sessionStorage.setItem("isAuthenticated", "true");
+
+                    document.getElementById("login-form").style.display = "none";
+                    document.getElementById("welcome-message").style.display = "block";
+                    document.getElementById("username").innerText = data.username;
+                    document.getElementById("point").innerText = data.points;
+                    document.getElementById("username").style.color = data.nicknameColor || "";
+                    updateLoginLogo(data.teamLogo);
+                });
+            } else {
+                document.getElementById("login-form").style.display = "block";
+                document.getElementById("welcome-message").style.display = "none";
+                sessionStorage.clear();
+            }
+        })
+        .catch(error => {
+            console.error("사용자 정보 가져오기 중 오류 발생:", error);
+            sessionStorage.clear();
+            document.getElementById("login-form").style.display = "block";
+            document.getElementById("welcome-message").style.display = "none";
+        });
 }
 
