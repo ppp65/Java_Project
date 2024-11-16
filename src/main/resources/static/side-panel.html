@@ -10,25 +10,7 @@
     <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
-<!-- Responsive navbar-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">EPL Insight</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="rank.html">순위</a></li>
-                <li class="nav-item"><a class="nav-link" href="schedule.html">일정</a></li>
-                <li class="nav-item"><a class="nav-link" href="news.html">뉴스</a></li>
-                <li class="nav-item"><a class="nav-link" href="highlights.html">하이라이트</a></li>
-                <li class="nav-item"><a class="nav-link" href="match%20prediction.html">승부 예측</a></li>
-                <li class="nav-item"><a class="nav-link" href="community.html">커뮤니티</a></li>
-                <li class="nav-item"><a class="nav-link" href="soccer%20ai.html">축구 AI</a></li>
-                <li class="nav-item"><a class="nav-link" href="point.html">포인트 상점</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+
 <!-- Page content-->
 <div class="container mt-5">
     <div class="row">
@@ -67,17 +49,20 @@
                         <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
                     </div>
                 </div>
+
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                        <button class="btn btn-primary" id="button-search" type="button" onclick="sendToSoccerAI()">Go!</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Footer-->
-<footer class="py-5 bg-dark">
-    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-</footer>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
+<
 </body>
 </html>

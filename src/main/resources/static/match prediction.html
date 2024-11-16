@@ -25,7 +25,6 @@
                 <li class="nav-item"><a class="nav-link" href="community.html">커뮤니티</a></li>
                 <li class="nav-item"><a class="nav-link" href="soccer%20ai.html">축구 AI</a></li>
                 <li class="nav-item"><a class="nav-link" href="point.html">포인트 상점</a></li>
-                <li class="nav-item"><a class="nav-link" href="information.html">내정보</a></li>
             </ul>
         </div>
     </div>
@@ -101,45 +100,38 @@
                 </div>
             </section>
         </div>
-        <!-- Side widgets-->
+        <!-- 오른쪽 사이드바: 로그인 및 검색 위젯 -->
         <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header">Login</div>
                 <div class="card-body">
-                    <!-- 로그인 전 입력 폼 -->
                     <div id="login-form">
                         <div class="input-group mb-3">
-                            <!-- 아이디 입력 -->
-                            <input class="form-control" type="text" id="user_id" placeholder="Enter username..." aria-label="Enter username..." aria-describedby="button-login" />
+                            <input class="form-control" type="text" id="user_id" placeholder="Enter username..." />
                         </div>
                         <div class="input-group mb-3">
-                            <!-- 비밀번호 입력 -->
-                            <input class="form-control" type="password" id="password" placeholder="Enter password..." aria-label="Enter password..." aria-describedby="button-login" />
+                            <input class="form-control" type="password" id="password" placeholder="Enter password..." />
                         </div>
-                        <!-- 로그인 버튼 -->
                         <div class="d-grid">
                             <button class="btn btn-primary" id="button-login" type="button">Login</button>
                         </div>
-                        <!-- 회원가입 링크 추가 -->
                         <div class="text-center mt-3">
                             <a href="signup.html" class="text-decoration-none">회원가입</a>
                         </div>
                     </div>
-
-                    <!-- 로그인 후 닉네임을 표시할 영역 -->
-                    <<div id="welcome-message" style="display: none;">
-                    <p>환영합니다, <span id="user-logo" style="display:inline;"></span><span id="username"></span> 님!</p>
-                    <p>포인트 : <span id="point"></span></p>
-                    <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
-                </div>
+                    <div id="welcome-message" style="display: none;">
+                        <p>환영합니다, <span id="user-logo" style="display:inline;"></span><span id="username"></span> 님!</p>
+                        <p>포인트 : <span id="point"></span></p>
+                        <button class="btn btn-secondary" id="logout" type="button">로그아웃</button>
+                    </div>
                 </div>
             </div>
-            <!-- Search widget-->
+            <!-- 검색 위젯 -->
             <div class="card mb-4">
                 <div class="card-header">Search</div>
                 <div class="card-body">
                     <div class="input-group">
-                        <input class="form-control" type="text" id="searchInput" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                        <input class="form-control" type="text" id="searchInput" placeholder="Enter search term..." />
                         <button class="btn btn-primary" id="button-search" type="button" onclick="sendToSoccerAI()">Go!</button>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.ParseException;
 import java.io.*;
@@ -16,11 +17,13 @@ import java.util.List;
 @Component
 public class SkySportsEplCrawlerWithMore {
 
-    public void executeCrawling() {
+    public List<NewsDto> executeCrawling() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
+
+        List<NewsDto> newsList = new ArrayList<>();
 
         StringBuilder newsContent = new StringBuilder();
         String filePath = Paths.get("src/main/resources/static/news.html").toAbsolutePath().toString();
@@ -45,6 +48,9 @@ public class SkySportsEplCrawlerWithMore {
                 String author = authorElement.getText();
                 String date = formatDate(dateElement.getText());
 
+                NewsDto news = new NewsDto(title, link, imageUrl, snippet, author, date);
+                newsList.add(news);
+
                 newsContent.append("<li><div style='display: flex; align-items: center; margin-bottom: 20px;'>");
                 newsContent.append("<a href='" + link + "' target='_blank'><img src='" + imageUrl + "' alt='News Image' style='width:300px; height:auto; margin-right: 20px;'></a>");
                 newsContent.append("<div><h2><a href='" + link + "' target='_blank'>" + title + "</a></h2>");
@@ -61,6 +67,7 @@ public class SkySportsEplCrawlerWithMore {
         } finally {
             driver.quit();
         }
+        return newsList;
     }
 
     private static String formatDate(String dateStr) {
