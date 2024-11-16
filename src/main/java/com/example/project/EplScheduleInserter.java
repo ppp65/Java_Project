@@ -32,9 +32,7 @@ public class EplScheduleInserter {
 
                 fileWriter.write("<td>" + match.getTime() + "</td>\n");
                 fileWriter.write("<td>" + match.getStadium() + "</td>\n");
-                fileWriter.write("<td><img src=\"" + match.getHomeTeamIcon() + "\" alt=\"" + match.getHomeTeam() + "\" style=\"width:20px; height:20px; vertical-align:middle;\"> " + match.getHomeTeam() + "</td>\n");
                 fileWriter.write("<td>" + match.getScore() + "</td>\n");
-                fileWriter.write("<td><img src=\"" + match.getAwayTeamIcon() + "\" alt=\"" + match.getAwayTeam() + "\" style=\"width:20px; height:20px; vertical-align:middle;\"> " + match.getAwayTeam() + "</td>\n");
 
                 fileWriter.write("</tr>\n");
             }
