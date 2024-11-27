@@ -26,14 +26,13 @@ dependencies {
     implementation 'com.h2database:h2'
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
     implementation 'org.jsoup:jsoup:1.15.3'
-    implementation 'org.seleniumhq.selenium:selenium-java:4.5.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.8.0'
     implementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
     implementation 'org.json:json:20210307'
     implementation 'org.springframework.session:spring-session-core'
     implementation 'org.hibernate.orm:hibernate-core:6.5.3.Final'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
-
 }
 
 tasks.named('test') {
