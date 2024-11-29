@@ -13,20 +13,15 @@ import java.util.List;
 public class DaumEplScheduleCrawler10 {
 
     public static void main(String[] args) {
-        // WebDriver 설정
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
-        // Daum 스포츠 EPL 일정 페이지 URL
         String baseUrl = "https://sports.daum.net/schedule/epl?date=202410";
 
-        // 출력할 HTML 파일 경로
         String filePath = Paths.get("DaumEplSchedule10.html").toAbsolutePath().toString();
 
         try {
-            // HTML 파일 작성 시작
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                // HTML 헤더 작성
                 writer.write("<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>EPL 경기 일정</title>");
                 writer.write("<style>");
                 writer.write("table { width: 100%; border-collapse: collapse; }");
@@ -39,10 +34,8 @@ public class DaumEplScheduleCrawler10 {
                 writer.write("</head><body>");
                 writer.write("<h1>Daum EPL 경기 일정</h1><table><tr><th>날짜</th><th>경기 시간</th><th>경기장</th><th>홈팀</th><th>스코어</th><th>원정팀</th></tr>");
 
-                // 페이지 접속
                 driver.get(baseUrl);
 
-                // 페이지 끝까지 스크롤
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 long lastHeight = (long) js.executeScript("return document.body.scrollHeight");
 
@@ -51,28 +44,23 @@ public class DaumEplScheduleCrawler10 {
                     Thread.sleep(2000); // 페이지가 로드될 시간을 기다림
                     long newHeight = (long) js.executeScript("return document.body.scrollHeight");
                     if (newHeight == lastHeight) {
-                        break; // 더 이상 스크롤이 변화가 없으면 탈출
+                        break;
                     }
                     lastHeight = newHeight;
                 }
 
-                // 경기 정보가 있는 tbody 요소 선택
                 WebElement tbodyElement = driver.findElement(By.id("scheduleList"));
 
-                // 각 경기를 나타내는 tr 요소들 선택
                 List<WebElement> matchElements = tbodyElement.findElements(By.tagName("tr"));
 
-                // 날짜 정보를 저장할 변수 (rowspan의 영향 때문에 필요)
                 String currentDate = "";
-                int rowspan = 0; // 같은 날짜에 대한 rowspan 값
+                int rowspan = 0;
 
                 for (int i = 0; i < matchElements.size(); i++) {
                     WebElement match = matchElements.get(i);
 
-                    // 날짜 정보가 rowspan에 걸려있을 경우, 새롭게 날짜를 추출하고 rowspan 카운트를 시작
                     if (!match.findElements(By.cssSelector("td.td_date")).isEmpty()) {
-                        // 다음 tr 태그들에 같은 날짜가 몇 개 있는지 계산
-                        rowspan = 1; // 현재 경기를 포함한 갯수
+                        rowspan = 1;
                         for (int j = i + 1; j < matchElements.size(); j++) {
                             WebElement nextMatch = matchElements.get(j);
                             if (nextMatch.findElements(By.cssSelector("td.td_date")).isEmpty()) {
@@ -81,11 +69,9 @@ public class DaumEplScheduleCrawler10 {
                                 break;
                             }
                         }
-                        // 새로운 날짜 정보를 가져옴
                         currentDate = match.findElement(By.cssSelector("td.td_date span.num_date")).getText();
                     }
 
-                    // 경기가 없는 행은 건너뜁니다
                     if (match.findElements(By.cssSelector("td.td_empty")).size() > 0) {
                         continue;
                     }
@@ -124,14 +110,12 @@ public class DaumEplScheduleCrawler10 {
                     }
                 }
 
-                // HTML 파일 마무리
                 writer.write("</table></body></html>");
                 System.out.println("EPL 일정 크롤링 완료: " + filePath);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
-            // WebDriver 종료
             driver.quit();
         }
     }

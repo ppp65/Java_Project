@@ -89,38 +89,38 @@
 
                     // 데이터 가져오기
                     function loadScheduleData() {
-                    // AJAX 요청으로 서버에서 데이터 가져오기
-                    fetch(`/api/getMatchesForMonth?year=${currentYear}&month=${currentMonth}`)
-                        .then(response => {
-                            return response.json();
-                        })
-                        .then(data => {
-                            let tbody = document.getElementById('Schedule-table');
-                            tbody.innerHTML = ''; // 기존 내용 제거
+                        // AJAX 요청으로 서버에서 데이터 가져오기
+                        fetch(`/api/getMatchesForMonth?year=${currentYear}&month=${currentMonth}`)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                let tbody = document.getElementById('Schedule-table');
+                                tbody.innerHTML = ''; // 기존 내용 제거
 
-                            // 데이터가 null인 경우
-                            if (data === null) {
-                                // 데이터가 없으면 이전/이후 버튼 비활성화
-                                document.getElementById('prevMonthBtn').disabled = true;
-                                document.getElementById('nextMonthBtn').disabled = true;
-                            } else {
-                                // 데이터가 있으면 이전/이후 버튼 활성화
-                                document.getElementById('prevMonthBtn').disabled = false;
-                                document.getElementById('nextMonthBtn').disabled = false;
+                                // 데이터가 null인 경우
+                                if (data === null) {
+                                    // 데이터가 없으면 이전/이후 버튼 비활성화
+                                    document.getElementById('prevMonthBtn').disabled = true;
+                                    document.getElementById('nextMonthBtn').disabled = true;
+                                } else {
+                                    // 데이터가 있으면 이전/이후 버튼 활성화
+                                    document.getElementById('prevMonthBtn').disabled = false;
+                                    document.getElementById('nextMonthBtn').disabled = false;
 
-                                // 데이터가 있으면 테이블에 채우기
-                                data.forEach(row => {
-                                    let tr = document.createElement('tr');
-                                    row.forEach(cell => {
-                                        let td = document.createElement('td');
-                                        td.textContent = cell;
-                                        tr.appendChild(td);
+                                    // 데이터가 있으면 테이블에 채우기
+                                    data.forEach(row => {
+                                        let tr = document.createElement('tr');
+                                        row.forEach(cell => {
+                                            let td = document.createElement('td');
+                                            td.textContent = cell;
+                                            tr.appendChild(td);
+                                        });
+                                        tbody.appendChild(tr);
                                     });
-                                    tbody.appendChild(tr);
-                                });
-                            }
-                        })
-                        .catch(error => console.error('Error loading data:', error));
+                                }
+                            })
+                            .catch(error => console.error('Error loading data:', error));
                     }
 
                     // 페이지 로드시 데이터 로드
