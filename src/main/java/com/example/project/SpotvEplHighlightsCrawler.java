@@ -88,7 +88,7 @@ public class SpotvEplHighlightsCrawler {
         } catch (Exception e) {
             System.out.println("크롤링 중 오류 발생: " + e.getMessage());
         } finally {
-            driver.quit(); // 드라이버 종료
+            driver.quit(); // 드라이버 종료!
         }
     }
 }
