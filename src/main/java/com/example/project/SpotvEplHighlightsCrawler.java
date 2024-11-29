@@ -25,47 +25,43 @@ public class SpotvEplHighlightsCrawler {
         WebDriver driver = new ChromeDriver(options);
 
         try {
-            // SPOTV 유튜브 채널 URL
-            driver.get("https://www.youtube.com/@SPOTV/videos");
+            // SPOTV EPL 하이라이트 재생목록 URL
+            driver.get("https://www.youtube.com/playlist?list=PL7MQjbfOyOE00FrDWwrbaTtH7mSZOKnvO");
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("ytd-rich-item-renderer")));
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("ytd-playlist-video-renderer")));
 
-            // 최근 동영상 가져오기
-            List<WebElement> videos = driver.findElements(By.cssSelector("ytd-rich-item-renderer"));
+            // 재생목록 동영상 가져오기
+            List<WebElement> videos = driver.findElements(By.cssSelector("ytd-playlist-video-renderer"));
 
-            // EPL 하이라이트 필터링
+            // EPL 하이라이트 HTML 파일 생성
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("SpotvEplHighlights.html", false))) {
                 writer.write("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>SPOTV EPL Highlights</title></head><body>");
                 writer.write("<h1>SPOTV EPL Highlights</h1>");
 
                 int videoCount = 0; // EPL 하이라이트 영상 카운트
                 for (WebElement video : videos) {
-                    if (videoCount >= 5) break; // 최대 5개만 가져오기
+                    if (videoCount >= 10) break; // 최대 5개만 가져오기
 
                     // 동영상 제목 가져오기
                     WebElement titleElement = video.findElement(By.cssSelector("#video-title"));
                     String title = titleElement.getText();
 
-                    // 동영상 URL 추출 (href가 없을 경우 대체 방법 사용)
-                    String videoUrl = null;
-                    try {
-                        videoUrl = titleElement.getAttribute("href");
-                        if (videoUrl == null || videoUrl.isEmpty()) {
-                            WebElement parentElement = titleElement.findElement(By.xpath(".."));
-                            videoUrl = parentElement.getAttribute("href");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("URL 가져오기 실패: " + e.getMessage());
-                    }
+                    // 동영상 URL 추출
+                    String videoUrl = titleElement.getAttribute("href");
 
                     // 썸네일 URL 가져오기
-                    String thumbnailUrl = video.findElement(By.cssSelector("img")).getAttribute("src");
-                    if (thumbnailUrl == null || thumbnailUrl.isEmpty()) {
-                        thumbnailUrl = video.findElement(By.cssSelector("img")).getAttribute("data-src");
-                    }
-                    if (thumbnailUrl == null || thumbnailUrl.isEmpty()) {
-                        thumbnailUrl = "https://via.placeholder.com/528x308?text=No+Thumbnail";
+                    String thumbnailUrl = null;
+                    try {
+                        thumbnailUrl = video.findElement(By.cssSelector("img")).getAttribute("src");
+                        if (thumbnailUrl == null || thumbnailUrl.isEmpty()) {
+                            thumbnailUrl = video.findElement(By.cssSelector("img")).getAttribute("data-src");
+                        }
+                        if (thumbnailUrl == null || thumbnailUrl.isEmpty()) {
+                            thumbnailUrl = "https://via.placeholder.com/528x308?text=No+Thumbnail";
+                        }
+                    } catch (Exception e) {
+                        System.out.println("썸네일 URL 가져오기 실패: " + e.getMessage());
                     }
 
                     // 제목 필터링: EPL 하이라이트 조건 (예: "[24/25 PL]" 및 "H/L" 포함)
