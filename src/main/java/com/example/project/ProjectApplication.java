@@ -25,6 +25,9 @@ public class ProjectApplication implements CommandLineRunner {
     @Autowired
     private DBService dbService; // DB 저장 서비스
 
+    @Autowired
+    private SpotvEplHighlightsCrawler spotvEplHighlightsCrawler; // SPOTV 하이라이트 크롤러
+
     public static void main(String[] args) {
         SpringApplication.run(ProjectApplication.class, args);
     }
@@ -50,5 +53,10 @@ public class ProjectApplication implements CommandLineRunner {
 
         dbService.uploadMatchDataToOracle(matches); // DB 저장
         System.out.println("일정 데이터가 성공적으로 처리되었습니다.");
+
+        // 4. SPOTV 하이라이트 크롤러 실행
+        System.out.println("SPOTV EPL 하이라이트 크롤링 시작...");
+        spotvEplHighlightsCrawler.executeCrawling();
+        System.out.println("SPOTV EPL 하이라이트 데이터가 성공적으로 크롤링되었습니다.");
     }
 }
