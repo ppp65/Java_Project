@@ -34,6 +34,8 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-core:6.5.3.Final'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
 }
 
 tasks.named('test') {
