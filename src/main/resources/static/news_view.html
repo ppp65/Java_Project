@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>뉴스 본문 - EPL Insight</title>
+    <link href="../../../../../Java_Project213/src/main/resources/static/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="../../../../../Java_Project213/src/main/resources/static/index.html">EPL Insight</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="../../../../../Java_Project213/src/main/resources/static/rank.html">순위</a></li>
+                <li class="nav-item"><a class="nav-link" href="../../../../../Java_Project213/src/main/resources/static/schedule.html">일정</a></li>
+                <li class="nav-item"><a class="nav-link active" href="news.html">뉴스</a></li>
+                <li class="nav-item"><a class="nav-link" href="../../../../../Java_Project213/src/main/resources/static/highlights.html">하이라이트</a></li>
+                <li class="nav-item"><a class="nav-link" href="../../../../../Java_Project213/src/main/resources/static/community.html">커뮤니티</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 id="news-title" class="fw-bolder text-center mb-4"></h1>
+    <p id="news-content" class="lead"></p>
+    <a href="news.html" class="btn btn-secondary mt-4">목록으로 돌아가기</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const newsId = new URLSearchParams(window.location.search).get('newsId');
+
+        async function loadNewsContent() {
+            try {
+                const response = await fetch(`/api/news/${newsId}`);
+                const news = await response.json();
+
+                document.getElementById('news-title').innerText = news.title;
+
+                const cleanedContent = news.content.replace(/<[^>]*>/g, "");
+                document.getElementById('news-content').innerText = cleanedContent;
+            } catch (error) {
+                console.error("뉴스 로드 실패:", error);
+            }
+        }
+
+        if (newsId) {
+            loadNewsContent();
+        } else {
+            alert("뉴스 ID가 제공되지 않았습니다.");
+        }
+    });
+</script>
+</body>
+</html>
